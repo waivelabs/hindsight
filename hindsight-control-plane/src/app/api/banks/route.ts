@@ -1,3 +1,4 @@
+import { reflectHistoryProxy } from "@/ccc/history-proxy";
 import { NextResponse } from "next/server";
 import { localizeApiErrorPayload } from "@/lib/i18n/api-errors";
 import { sdk, lowLevelClient } from "@/lib/hindsight-client";
@@ -6,6 +7,8 @@ import { respondWithSdk } from "@/lib/sdk-response";
 const HTTP_CREATED = 201;
 
 export async function GET(request: Request) {
+  const history = await reflectHistoryProxy(request);
+  if (history) return history;
   const { searchParams } = new URL(request.url);
   const q = searchParams.get("q");
   const limit = searchParams.get("limit");
@@ -22,6 +25,8 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  const history = await reflectHistoryProxy(request);
+  if (history) return history;
   let body;
   try {
     body = await request.json();

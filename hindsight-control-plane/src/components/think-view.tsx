@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useCCCState, useCCCNotice } from "@/ccc/reflect-state";
 import { useTranslations } from "next-intl";
 import { client } from "@/lib/api";
 import { useBank } from "@/lib/bank-context";
@@ -47,21 +48,21 @@ type BasedOnTab = "directives" | "mental_models" | "observations" | "world" | "e
 export function ThinkView() {
   const t = useTranslations("thinkView");
   const { currentBank } = useBank();
-  const [query, setQuery] = useState("");
-  const [budget, setBudget] = useState<"low" | "mid" | "high">("mid");
-  const [maxTokens, setMaxTokens] = useState<number>(4096);
-  const [includeFacts, setIncludeFacts] = useState(true);
-  const [includeToolCalls, setIncludeToolCalls] = useState(true);
-  const [viewMode, setViewMode] = useState<ViewMode>("answer");
-  const [result, setResult] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-  const [tags, setTags] = useState("");
-  const [tagsMatch, setTagsMatch] = useState<TagsMatch>("any");
-  const [factTypes, setFactTypes] = useState<FactType[]>([]);
-  const [excludeMentalModels, setExcludeMentalModels] = useState(false);
-  const [excludeMentalModelIds, setExcludeMentalModelIds] = useState("");
-  const [responseSchema, setResponseSchema] = useState("");
-  const [optionsOpen, setOptionsOpen] = useState(false);
+  const [query, setQuery] = useCCCState(currentBank, "query", "");
+  const [budget, setBudget] = useCCCState<"low" | "mid" | "high">(currentBank, "budget", "mid");
+  const [maxTokens, setMaxTokens] = useCCCState(currentBank, "maxTokens", 4096);
+  const [includeFacts, setIncludeFacts] = useCCCState(currentBank, "includeFacts", true);
+  const [includeToolCalls, setIncludeToolCalls] = useCCCState(currentBank, "includeToolCalls", true);
+  const [viewMode, setViewMode] = useCCCState<ViewMode>(currentBank, "tab", "answer");
+  const [result, setResult] = useCCCState<any>(currentBank, "result", null);
+  const [loading, setLoading] = useCCCState(currentBank, "loading", false);
+  const [tags, setTags] = useCCCState(currentBank, "tags", "");
+  const [tagsMatch, setTagsMatch] = useCCCState<TagsMatch>(currentBank, "tagsMatch", "any");
+  const [factTypes, setFactTypes] = useCCCState<FactType[]>(currentBank, "factTypes", []);
+  const [excludeMentalModels, setExcludeMentalModels] = useCCCState(currentBank, "excludeMentalModels", false);
+  const [excludeMentalModelIds, setExcludeMentalModelIds] = useCCCState(currentBank, "excludeMentalModelIds", "");
+  const [responseSchema, setResponseSchema] = useCCCState(currentBank, "responseSchema", "");
+  const [optionsOpen, setOptionsOpen] = useCCCState(currentBank, "optionsOpen", false);
   const [feedback, setFeedback] = useState("");
   const [feedbackSubmitting, setFeedbackSubmitting] = useState(false);
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
@@ -71,6 +72,8 @@ export function ThinkView() {
   const [loadingObservation, setLoadingObservation] = useState(false);
   const [selectedMentalModelId, setSelectedMentalModelId] = useState<string | null>(null);
   const [activeBasedOnTab, setActiveBasedOnTab] = useState<BasedOnTab>("world");
+
+  const cccNotice = useCCCNotice(currentBank);
 
   const FEEDBACK_DIRECTIVE_NAME = "General Feedback";
 
@@ -361,6 +364,7 @@ export function ThinkView() {
       )}
 
       {/* Results */}
+      {cccNotice && <p role="status" className="text-xs text-muted-foreground">{cccNotice}</p>}
       {!loading && result && (
         <div className="space-y-4">
           {/* Summary Stats & Tabs */}

@@ -11,7 +11,7 @@ import { DocumentsView } from "@/components/documents-view";
 import { EntitiesView } from "@/components/entities-view";
 import { KnowledgeBaseView } from "@/components/knowledge-base-view";
 import { HomeView } from "@/components/home-view";
-import { ThinkView } from "@/components/think-view";
+import { ReflectWorkspace } from "@/ccc/ReflectWorkspace";
 import { SearchDebugView } from "@/components/search-debug-view";
 import { BankProfileView } from "@/components/bank-profile-view";
 import { BankConfigView } from "@/components/bank-config-view";
@@ -643,7 +643,7 @@ export default function BankPage() {
                 <div>
                   <h1 className="text-3xl font-bold mb-2 text-foreground">{t("reflect")}</h1>
                   <p className="text-muted-foreground mb-6">{t("reflectDescription")}</p>
-                  <ThinkView />
+                  <ReflectWorkspace />
                 </div>
               )}
 

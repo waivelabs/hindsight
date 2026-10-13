@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { DocumentsRequestGate } from "@/lib/documents-request-gate";
 import { useTranslations, useLocale } from "next-intl";
 import { toast } from "sonner";
 import { client, DocumentTimeField, LLMRequestEntry } from "@/lib/api";
@@ -814,12 +815,30 @@ export function DocumentsView() {
     null
   );
 
+  const documentGate = useRef(new DocumentsRequestGate());
+  const documentContext = JSON.stringify([currentBank, searchQuery, selectedTags,
+    tagsMatch, dateRange, timeField, customFrom, customTo]);
+  documentGate.current.setContext(documentContext);
+  const [documentBank, setDocumentBank] = useState(currentBank);
+  // Reset during render so a different bank never paints the previous bank's rows.
+  if (documentBank !== currentBank) {
+    setDocumentBank(currentBank);
+    setDocuments([]);
+    setTotal(0);
+    setLoaded(false);
+    setLoading(false);
+    setLastRefreshedAt(null);
+    setPendingUploads([]);
+    setInFlightDocIds(new Set());
+    setSelectedDocument(null);
+    setCurrentPage(1);
+  }
+
   const loadDocuments = useCallback(
     async (page: number = 1) => {
       if (!currentBank) return;
 
-      setLoading(true);
-      try {
+      return documentGate.current.run(documentContext, page, async () => {
         const pageOffset = (page - 1) * ITEMS_PER_PAGE;
         // Not named `window`: this file reaches for the global elsewhere
         // (setInterval, addEventListener), and shadowing it here is a trap.
@@ -828,7 +847,7 @@ export function DocumentsView() {
             ? resolveCustomRange(customFrom, customTo).bounds
             : resolveDateRangePreset(dateRange);
         const hasWindow = Boolean(timeWindow.start_date || timeWindow.end_date);
-        const data: any = await client.listDocuments({
+        return client.listDocuments({
           bank_id: currentBank,
           q: searchQuery,
           tags: selectedTags,
@@ -841,15 +860,14 @@ export function DocumentsView() {
           limit: ITEMS_PER_PAGE,
           offset: pageOffset,
         });
+      }, () => setLoading(true), (data: any) => {
         setDocuments(data.items || []);
         setTotal(data.total || 0);
-      } catch (error) {
-        // Error toast is shown automatically by the API client interceptor
-      } finally {
+        setLastRefreshedAt(Date.now());
+      }, () => {
         setLoading(false);
         setLoaded(true);
-        setLastRefreshedAt(Date.now());
-      }
+      });
     },
     [currentBank, searchQuery, selectedTags, tagsMatch, dateRange, timeField, customFrom, customTo]
   );
@@ -1784,6 +1802,7 @@ export function DocumentsView() {
                                   horizontally depending on whether its document
                                   had one. Here it appends to a line that is
                                   already ragged, and nothing moves. */}
+                              {typeof doc.lifecycle === "string" && <span className="text-xs text-muted-foreground">{doc.lifecycle === "provisional" ? "Provisional · unverified" : doc.lifecycle}</span>}
                               <div className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground">
                                 {doc.updated_at ? (
                                   <span title={new Date(doc.updated_at).toLocaleString()}>
