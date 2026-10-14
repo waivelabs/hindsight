@@ -3,6 +3,12 @@
 import { useRef, useEffect, useCallback, useMemo, useState } from "react";
 import type { CSSProperties } from "react";
 import { useTranslations } from "next-intl";
+// ccc(constellation)
+import {
+  HorizonConstellation,
+  horizonEnabled,
+  type HorizonExtras,
+} from "@/ccc/HorizonConstellation";
 import { prepare, layout, prepareWithSegments, layoutWithLines } from "@chenglou/pretext";
 import type { GraphData, GraphNode, GraphLink } from "./graph-data";
 
@@ -243,7 +249,9 @@ function toolbarBtnStyle(isDark: boolean): CSSProperties {
 // Component
 // ============================================================================
 
-export function Constellation({
+// ccc(constellation): the upstream renderer, kept intact; the exported
+// Constellation below picks it or the horizon ring (src/ccc/HorizonConstellation).
+function ConstellationLegacy({
   data,
   height = 700,
   onNodeClick,
@@ -1717,4 +1725,16 @@ export function Constellation({
       />
     </div>
   );
+}
+
+// ccc(constellation): one switch. `localStorage["ccc-constellation"] = "legacy"`
+// brings the upstream star field back; everything else gets the horizon ring.
+export function Constellation(props: ConstellationProps & HorizonExtras) {
+  const [horizon, setHorizon] = useState<boolean | null>(null);
+  useEffect(() => setHorizon(horizonEnabled()), []);
+  if (horizon === null) return <div style={{ height: props.height ?? 700 }} />;
+  if (horizon) return <HorizonConstellation {...props} />;
+  const { cccLimit: _ignored, ...rest } = props;
+  void _ignored;
+  return <ConstellationLegacy {...rest} />;
 }

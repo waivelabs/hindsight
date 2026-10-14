@@ -292,6 +292,26 @@
       "file": "src/components/home-view.tsx",
       "marker": "from \"@/ccc/HomeStats\"",
       "count": 1
+    },
+    {
+      "file": "src/components/constellation.tsx",
+      "marker": "ccc(constellation)",
+      "count": 3
+    },
+    {
+      "file": "src/components/constellation.tsx",
+      "marker": "from \"@/ccc/HorizonConstellation\"",
+      "count": 1
+    },
+    {
+      "file": "src/components/constellation.tsx",
+      "marker": "function ConstellationLegacy(",
+      "count": 1
+    },
+    {
+      "file": "src/components/data-view.tsx",
+      "marker": "ccc(constellation)",
+      "count": 1
     }
   ],
   "built_css": {

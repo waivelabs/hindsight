@@ -31,6 +31,7 @@ class string or Radix attribute moved, the rule silently stops matching.
 | Toast | `[data-sonner-toaster] [data-sonner-toast][data-type=…]`, `[data-icon]`, `[data-description]`, `[data-button]` | sonner DOM; upstream tone classes in `ui/sonner.tsx` use `!important`, so these rules live in `@layer theme` | data attr |
 | Header bar | `div.bg-card.border-b-4.border-primary-gradient` | `components/bank-selector.tsx` header root | literal class |
 | Home A2 (WAI-1005) | anchored block: 5 × `ccc(home)` markers + `@/ccc/HomeStats` import in `components/home-view.tsx`; strip/legend styles are own classes in `src/ccc/home.css` | `components/home-view.tsx` | anchored edit |
+| Constellation (WAI-1055) | anchored: `export function Constellation(` → `function ConstellationLegacy(` + 3 × `ccc(constellation)` markers + `@/ccc/HorizonConstellation` import in `components/constellation.tsx`; 1 × `ccc(constellation)` (`cccLimit` prop) in `components/data-view.tsx`; renderer and chrome are own files `src/ccc/horizon-engine.js`, `HorizonConstellation.tsx`, `constellation.css`; uses upstream i18n keys `constellation.*` only | `components/constellation.tsx`, `components/data-view.tsx` | anchored edit |
 
 ## Specificity notes
 

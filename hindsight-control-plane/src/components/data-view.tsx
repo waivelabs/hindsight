@@ -809,6 +809,15 @@ export function DataView({
                   onNodeClick={handleGraphNodeClick}
                   nodeColorFn={nodeColorFn}
                   linkColorFn={linkColorFn}
+                  // ccc(constellation): node-count control for the horizon ring (1k–10k).
+                  cccLimit={{
+                    value: fetchLimit,
+                    onChange: (n) => {
+                      setFetchLimit(n);
+                      const { tags, match } = resolveTagQuery();
+                      loadData(n, searchQuery || undefined, tags, match);
+                    },
+                  }}
                   nodeSizeFn={factType === "observation" ? observationNodeSizeFn : undefined}
                   sizeLegendLabel={factType === "observation" ? t("sourceFactsLabel") : undefined}
                   clusterKeyFn={

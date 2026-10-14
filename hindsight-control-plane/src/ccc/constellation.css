@@ -1,0 +1,165 @@
+/* ccc(constellation): chrome around the horizon-ring canvas (WAI-1055). */
+.ccc-cv {
+  position: relative;
+  width: 100%;
+  background: var(--background);
+  overflow: hidden;
+  cursor: grab;
+}
+.ccc-cv:fullscreen {
+  border-radius: 0;
+}
+.ccc-cv__host {
+  position: absolute;
+  inset: 0;
+}
+.ccc-cv__hint,
+.ccc-cv__hud {
+  position: absolute;
+  left: 14px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.66rem;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+  color: var(--ccc-ink-4);
+  pointer-events: none;
+  z-index: 2;
+}
+.ccc-cv__hint {
+  top: 12px;
+}
+.ccc-cv__hud {
+  bottom: 12px;
+  color: var(--ccc-ink-3);
+}
+.ccc-cv__tools {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  z-index: 2;
+}
+.ccc-btn,
+.ccc-seg button {
+  font:
+    500 0.8125rem/1 var(--font-sans),
+    system-ui,
+    sans-serif;
+  color: var(--ccc-ink-2);
+  background: color-mix(in srgb, var(--card) 70%, transparent);
+  border: 1px solid var(--ccc-line-2);
+  border-radius: var(--ccc-r-ctl, 8px);
+  padding: 7px 10px;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition:
+    background-color var(--ccc-d-micro) var(--ccc-ease),
+    color var(--ccc-d-micro) var(--ccc-ease);
+}
+.ccc-btn:hover,
+.ccc-seg button:hover {
+  color: var(--foreground);
+  background: var(--secondary);
+}
+.ccc-btn[aria-pressed="true"] {
+  color: var(--foreground);
+}
+.ccc-seg {
+  display: inline-flex;
+  border: 1px solid var(--ccc-line-2);
+  border-radius: 999px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--card) 70%, transparent);
+  margin-right: 6px;
+}
+.ccc-seg button {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 7px 10px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+.ccc-seg button[aria-pressed="true"] {
+  background: var(--secondary);
+  color: var(--foreground);
+}
+.ccc-cv__legend {
+  position: absolute;
+  right: 14px;
+  bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 2;
+  pointer-events: none;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  color: var(--ccc-ink-3);
+}
+.ccc-cv__lbl {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ccc-ink-4);
+}
+.ccc-cv__ramp {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.ccc-cv__ramp i {
+  display: inline-block;
+  width: 72px;
+  height: 4px;
+  border-radius: 2px;
+}
+.ccc-cv__lk {
+  display: inline-flex;
+  gap: 12px;
+}
+.ccc-cv__lk i {
+  font-style: normal;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.ccc-cv__lk i::before {
+  content: "";
+  width: 10px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--c);
+}
+.ccc-cv__tip {
+  position: absolute;
+  max-width: 300px;
+  padding: 8px 10px;
+  border-radius: var(--ccc-r-card, 12px);
+  background: var(--ccc-elev);
+  border: 1px solid var(--ccc-line-2);
+  box-shadow: var(--shadow-lg);
+  color: var(--foreground);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(2px);
+  transition:
+    opacity var(--ccc-d-micro) var(--ccc-ease),
+    transform var(--ccc-d-micro) var(--ccc-ease);
+  z-index: 3;
+}
+.ccc-cv__tip[data-open] {
+  opacity: 1;
+  transform: none;
+}
+@media (max-width: 640px) {
+  .ccc-cv__hint,
+  .ccc-cv__legend .ccc-cv__ramp {
+    display: none;
+  }
+}
