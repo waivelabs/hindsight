@@ -16,6 +16,8 @@
  * [locale]/layout.tsx. No upstream file is edited for Layer A.
  */
 
+@import "./primitives.css";
+
 :root {
   /* ---- Dawn (light) ---- */
   --background: #fff8f1;
@@ -103,6 +105,10 @@
   /* Waive extras that components in src/ccc/ may use. Dawn values. */
   --ccc-accent: #e65100;
   --ccc-accent-ink: #ffffff;
+  --ccc-blue-solid: #3179f5;
+  --ccc-input: #ffffff;
+  --ccc-r-card: 12px;
+  --ccc-r-ctl: 8px;
   --ccc-sun: #ff7a1a;
   --ccc-amber: #d9870b;
   --ccc-blue: #3179f5;
@@ -187,7 +193,7 @@
   --hs-surface-muted: #10141e;
   --hs-fg-primary: #e9eef7;
   --hs-fg-muted: #8593ab;
-  --hs-fg-on-accent: #161b26;
+  --hs-fg-on-accent: #ffffff; /* on blue-solid fills */
   --hs-border-default: rgba(148, 163, 184, 0.14);
   --hs-border-subtle: rgba(148, 163, 184, 0.08);
   --hs-success: #4ade80;
@@ -206,6 +212,8 @@
 
   --ccc-accent: #ffa45c;
   --ccc-accent-ink: #1a0f08;
+  --ccc-blue-solid: #3179f5;
+  --ccc-input: #121725;
   --ccc-sun: #ff8a3d;
   --ccc-amber: #ffb454;
   --ccc-blue: #7aa7f8;

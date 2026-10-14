@@ -1,0 +1,277 @@
+/* CCC theme overlay — Layer B (WAI-997).
+ *
+ * Restyles the shadcn/Radix primitives to the Waive kit with CSS only. Every
+ * selector is a hook listed in src/ccc/hooks.md (Radix role/data-state,
+ * element, data-slot, or a stable literal class string from the primitive's
+ * cva base). Behaviour and accessibility are untouched: no TSX edits.
+ * Imported by theme.css. Specificity is kept at or above (0,2,1) so these
+ * declarations beat single Tailwind utilities without !important, except
+ * where upstream already uses !important (sonner).
+ */
+
+/* ---- Card: flat panel, hairline, radius 12, no shadow ------------------ */
+div.bg-card.border.rounded-\[16px\] {
+  border-radius: var(--ccc-r-card, 12px);
+  border-color: var(--border);
+  box-shadow: none;
+}
+/* CardTitle: Sora, card heading scale. */
+div.text-2xl.font-semibold.tracking-tight {
+  font-family: var(--font-sora), var(--font-sans), system-ui, sans-serif;
+  font-size: 1.0625rem; /* 17 — h3 in the kit; cards are not page titles */
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+/* ---- Button: radius 8, solid blue primary, hairline secondary ---------- */
+.inline-flex.rounded-\[10px\].text-\[13px\] {
+  border-radius: var(--ccc-r-ctl, 8px);
+  transition:
+    background-color var(--ccc-d-micro) var(--ccc-ease),
+    color var(--ccc-d-micro) var(--ccc-ease),
+    border-color var(--ccc-d-micro) var(--ccc-ease),
+    transform var(--ccc-d-micro) var(--ccc-ease);
+}
+.inline-flex.rounded-\[10px\].text-\[13px\]:active {
+  transform: translateY(0.5px);
+}
+/* default + gradient variants: the one blue action per view */
+.inline-flex.rounded-\[10px\].bg-primary.text-primary-foreground,
+.inline-flex.rounded-\[10px\].bg-primary-gradient {
+  background: var(--ccc-blue-solid);
+  color: #ffffff;
+  box-shadow: none;
+}
+.inline-flex.rounded-\[10px\].bg-primary.text-primary-foreground:hover,
+.inline-flex.rounded-\[10px\].bg-primary-gradient:hover {
+  background: color-mix(in srgb, var(--ccc-blue-solid) 88%, #000);
+  opacity: 1;
+}
+/* outline: surface-2 + hairline */
+.inline-flex.rounded-\[10px\].border-border.bg-card {
+  background: var(--secondary);
+  border-color: var(--ccc-line-2);
+}
+.inline-flex.rounded-\[10px\].border-border.bg-card:hover {
+  background: var(--ccc-elev);
+  border-color: var(--ccc-line-3);
+}
+/* destructive: bad tone, readable text on both themes */
+.inline-flex.rounded-\[10px\].bg-destructive {
+  color: #ffffff;
+  background: color-mix(in srgb, var(--hs-danger) 86%, #0f172a);
+}
+.dark .inline-flex.rounded-\[10px\].bg-destructive {
+  color: #161b26;
+  background: var(--hs-danger);
+}
+
+/* ---- Input / Select trigger / Textarea --------------------------------- */
+input.rounded-\[10px\].border-border,
+textarea.rounded-\[10px\].border-border,
+button[role="combobox"].rounded-\[10px\] {
+  border-radius: var(--ccc-r-ctl, 8px);
+  background: var(--ccc-input);
+  border-color: var(--input);
+}
+input.rounded-\[10px\].border-border:hover,
+textarea.rounded-\[10px\].border-border:hover {
+  border-color: var(--ccc-line-3);
+}
+input.rounded-\[10px\].border-border:focus-visible,
+textarea.rounded-\[10px\].border-border:focus-visible {
+  border-color: var(--ccc-blue);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ccc-blue) 25%, transparent);
+}
+
+/* ---- Table: ledger ------------------------------------------------------ */
+div.overflow-auto.ring-1.bg-card {
+  border-radius: 0;
+  --tw-ring-color: var(--border);
+  background: transparent;
+}
+div.overflow-auto.ring-1.bg-card > table {
+  font-variant-numeric: tabular-nums;
+}
+div.overflow-auto.ring-1.bg-card > table > thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--hs-surface-muted);
+}
+div.overflow-auto.ring-1.bg-card > table th {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ccc-ink-3);
+  border-bottom: 1px solid var(--ccc-line-2);
+}
+div.overflow-auto.ring-1.bg-card > table td {
+  border-bottom: 1px solid var(--border);
+}
+div.overflow-auto.ring-1.bg-card > table > tbody > tr {
+  transition: background-color var(--ccc-d-micro) var(--ccc-ease);
+}
+div.overflow-auto.ring-1.bg-card > table > tbody > tr:hover {
+  background: var(--secondary);
+}
+div.overflow-auto.ring-1.bg-card > table > tbody > tr[data-state="selected"] {
+  background: color-mix(in srgb, var(--ccc-whisper) 14%, transparent);
+}
+
+/* ---- Tabs: underline, blue indicator, no pill --------------------------- */
+[role="tablist"].inline-flex.rounded-md.bg-muted {
+  height: auto;
+  padding: 0;
+  gap: 1.25rem;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: inset 0 -1px 0 var(--border);
+}
+[role="tablist"] > [role="tab"].rounded-sm {
+  border-radius: 0;
+  padding: 0.5rem 0.125rem 0.625rem;
+  color: var(--ccc-ink-3);
+  background: transparent;
+  box-shadow: inset 0 -2px 0 transparent;
+  transition:
+    color var(--ccc-d-state) var(--ccc-ease),
+    box-shadow var(--ccc-d-state) var(--ccc-ease);
+}
+[role="tablist"] > [role="tab"].rounded-sm:hover {
+  color: var(--foreground);
+}
+[role="tablist"] > [role="tab"].rounded-sm[data-state="active"] {
+  color: var(--foreground);
+  background: transparent;
+  box-shadow: inset 0 -2px 0 var(--ccc-blue);
+}
+
+/* ---- Sidebar: sunk, hairline edge, quiet active item -------------------- */
+aside.bg-card.border-r.h-full {
+  background: var(--sidebar);
+  border-color: var(--sidebar-border);
+}
+aside.bg-card.border-r.h-full nav a.rounded-lg {
+  border-radius: var(--ccc-r-ctl, 8px);
+  transition:
+    background-color var(--ccc-d-micro) var(--ccc-ease),
+    color var(--ccc-d-micro) var(--ccc-ease);
+}
+aside.bg-card.border-r.h-full nav a.bg-primary-gradient {
+  background: var(--sidebar-accent);
+  color: var(--ccc-blue);
+  box-shadow: inset 2px 0 0 var(--ccc-accent);
+}
+aside.bg-card.border-r.h-full nav a.text-muted-foreground:hover {
+  background: var(--sidebar-accent);
+  color: var(--foreground);
+}
+
+/* ---- Checkbox: blue checked state --------------------------------------- */
+button[role="checkbox"].rounded-sm {
+  border-radius: 4px;
+  border-color: var(--ccc-line-3);
+  background: var(--card);
+}
+button[role="checkbox"].rounded-sm[data-state="checked"],
+button[role="checkbox"].rounded-sm[data-state="indeterminate"] {
+  background: var(--ccc-blue-solid);
+  border-color: var(--ccc-blue-solid);
+  color: #ffffff;
+}
+
+/* ---- Overlays: dialog, popover, menu, select ---------------------------- */
+/* Scrim */
+.fixed.inset-0.bg-black\/60 {
+  background: var(--ccc-scrim);
+}
+/* Dialog content */
+[role="dialog"].fixed.max-w-lg,
+[role="alertdialog"].fixed {
+  background: var(--ccc-elev);
+  border-radius: var(--ccc-r-card, 12px);
+  border-color: var(--ccc-line-2);
+  box-shadow: var(--shadow-xl);
+}
+/* Popover content (role=dialog inside the popper wrapper) and menus */
+[data-radix-popper-content-wrapper] > [role="dialog"],
+[data-radix-popper-content-wrapper] > [role="menu"],
+[data-radix-popper-content-wrapper] > [role="listbox"],
+[role="menu"].rounded-\[10px\],
+[role="listbox"].rounded-\[10px\] {
+  background: var(--ccc-elev);
+  border-radius: var(--ccc-r-card, 12px);
+  border-color: var(--ccc-line-2);
+  box-shadow: var(--shadow-lg);
+}
+[role="menuitem"],
+[role="menuitemcheckbox"],
+[role="menuitemradio"],
+[role="option"] {
+  border-radius: 6px;
+}
+[role="menuitem"][data-highlighted],
+[role="menuitemcheckbox"][data-highlighted],
+[role="menuitemradio"][data-highlighted],
+[role="option"][data-highlighted] {
+  background: var(--secondary);
+}
+
+/* ---- Toast (sonner): elevated surface, glyph carries the tone ----------
+   Upstream sets the tone fills with Tailwind `!bg-*` utilities. Those live in
+   @layer utilities, and for !important declarations an EARLIER layer wins, so
+   these rules sit in @layer theme (declared first by Tailwind) to beat them. */
+@layer theme {
+  [data-sonner-toaster] [data-sonner-toast] {
+    background: var(--ccc-elev) !important;
+    color: var(--foreground) !important;
+    border: 1px solid var(--ccc-line-2) !important;
+    border-radius: var(--ccc-r-card, 12px) !important;
+    box-shadow: var(--shadow-lg) !important;
+    font-size: 0.8125rem;
+  }
+  [data-sonner-toaster] [data-sonner-toast] [data-description] {
+    color: var(--ccc-ink-2) !important;
+    opacity: 1 !important;
+  }
+  [data-sonner-toaster] [data-sonner-toast] [data-icon] {
+    color: var(--ccc-ink-3);
+  }
+  [data-sonner-toaster] [data-sonner-toast][data-type="success"] [data-icon] {
+    color: var(--hs-success);
+  }
+  [data-sonner-toaster] [data-sonner-toast][data-type="info"] [data-icon] {
+    color: var(--hs-info);
+  }
+  [data-sonner-toaster] [data-sonner-toast][data-type="warning"] [data-icon] {
+    color: var(--hs-warning);
+  }
+  [data-sonner-toaster] [data-sonner-toast][data-type="error"] [data-icon] {
+    color: var(--hs-danger);
+  }
+  [data-sonner-toaster] [data-sonner-toast][data-type="error"] {
+    border-left: 3px solid var(--hs-danger) !important;
+  }
+  [data-sonner-toaster] [data-sonner-toast][data-type="warning"] {
+    border-left: 3px solid var(--hs-warning) !important;
+  }
+  [data-sonner-toaster] [data-sonner-toast][data-type="success"] {
+    border-left: 3px solid var(--hs-success) !important;
+  }
+  [data-sonner-toaster] [data-sonner-toast] [data-button] {
+    background: var(--ccc-blue-solid) !important;
+    color: #ffffff !important;
+    border-radius: 6px !important;
+  }
+}
+
+/* ---- Header bar: hairline instead of the 4px gradient rule -------------- */
+div.bg-card.border-b-4.border-primary-gradient {
+  border-bottom-width: 1px;
+  border-image: none;
+  border-bottom-color: var(--border);
+  background: var(--sidebar);
+}
