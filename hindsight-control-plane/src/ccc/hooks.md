@@ -30,6 +30,7 @@ class string or Radix attribute moved, the rule silently stops matching.
 | Menu items | `[role="menuitem"|"menuitemcheckbox"|"menuitemradio"|"option"][data-highlighted]` | Radix | role + data attr |
 | Toast | `[data-sonner-toaster] [data-sonner-toast][data-type=…]`, `[data-icon]`, `[data-description]`, `[data-button]` | sonner DOM; upstream tone classes in `ui/sonner.tsx` use `!important`, so these rules live in `@layer theme` | data attr |
 | Header bar | `div.bg-card.border-b-4.border-primary-gradient` | `components/bank-selector.tsx` header root | literal class |
+| Home A2 (WAI-1005) | anchored block: 5 × `ccc(home)` markers + `@/ccc/HomeStats` import in `components/home-view.tsx`; strip/legend styles are own classes in `src/ccc/home.css` | `components/home-view.tsx` | anchored edit |
 
 ## Specificity notes
 

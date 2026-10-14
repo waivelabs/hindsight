@@ -14,6 +14,8 @@ import { formatRelativeTime, formatAbsoluteDateTime } from "@/lib/relative-time"
 import { MemoryStoreCard, MemoriesActivityChart, type BankStats } from "./bank-stats-view";
 import { TreeRow } from "./knowledge-base-view";
 import { useFeatures } from "@/lib/features-context";
+// ccc(home): A2 stats strip, series colors from theme tokens, map legend (WAI-1005).
+import { HomeStatsStrip, ConstellationLegend, useSeriesColors } from "@/ccc/HomeStats";
 
 const FALLBACK_COLOR = "#0074d9";
 // The dashboard constellation is a glanceable memory map, not the full graph
@@ -60,6 +62,7 @@ export function HomeView({
   const router = useRouter();
   const { features } = useFeatures();
   const observationsEnabled = features?.observations ?? false;
+  const seriesColors = useSeriesColors(); // ccc(home)
   const [stats, setStats] = useState<BankStats | null>(null);
   const [graph, setGraph] = useState<{ nodes?: unknown[]; edges?: unknown[] } | null>(null);
   const [graphLoading, setGraphLoading] = useState(true);
@@ -187,6 +190,15 @@ export function HomeView({
         {t("subtitle")} <span className="font-mono text-foreground">{bankId}</span>
       </p>
 
+      {/* ccc(home): four-number stats strip with 7-day sparklines (A2). */}
+      <HomeStatsStrip
+        bankId={bankId}
+        stats={stats}
+        pages={pages}
+        docs={docs}
+        observationsEnabled={observationsEnabled}
+      />
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:h-[520px]">
         {/* Memory constellation — fills the row height so it never leaves a gap. */}
         <div className="lg:col-span-2 bg-card border border-border border-solid rounded-[16px] overflow-hidden flex flex-col lg:h-full">
@@ -203,15 +215,19 @@ export function HomeView({
             </button>
           </div>
           {constellationData.nodes.length > 0 ? (
-            <Constellation
-              data={constellationData}
-              height={464}
-              onNodeClick={() => onNavigate("data")}
-              nodeSizeFn={nodeSizeFn}
-              clusterKeyFn={(node) => node.group ?? null}
-              clusterColorFn={(key) => TYPE_COLORS[key] || FALLBACK_COLOR}
-              clusterLabelFn={(key) => key}
-            />
+            <>
+              <Constellation
+                data={constellationData}
+                height={430}
+                onNodeClick={() => onNavigate("data")}
+                nodeSizeFn={nodeSizeFn}
+                clusterKeyFn={(node) => node.group ?? null}
+                clusterColorFn={(key) => seriesColors[key] || TYPE_COLORS[key] || FALLBACK_COLOR} // ccc(home)
+                clusterLabelFn={(key) => key}
+              />
+              {/* ccc(home): fact types in view with counts, and how much of the bank the map shows. */}
+              <ConstellationLegend data={constellationData} total={stats?.total_nodes ?? 0} />
+            </>
           ) : graphLoading ? (
             <div className="flex flex-1 items-center justify-center">
               <Spinner size="lg" variant="jump" />
