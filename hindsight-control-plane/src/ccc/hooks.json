@@ -1,0 +1,291 @@
+{
+  "schema": "ccc-theme-hooks@1",
+  "upstream_base": "v0.10.2",
+  "css_files": [
+    "src/ccc/theme.css",
+    "src/ccc/primitives.css"
+  ],
+  "upstream_globals": "src/app/globals.css",
+  "own_var_prefixes": [
+    "--ccc-",
+    "--color-",
+    "--font-sora",
+    "--tw-"
+  ],
+  "hooks": [
+    {
+      "hook": "Card panel",
+      "file": "src/components/ui/card.tsx",
+      "must_contain": [
+        "bg-card text-card-foreground border border-border border-solid rounded-[16px]"
+      ]
+    },
+    {
+      "hook": "CardTitle",
+      "file": "src/components/ui/card.tsx",
+      "must_contain": [
+        "text-2xl font-semibold leading-none tracking-tight"
+      ]
+    },
+    {
+      "hook": "Button base",
+      "file": "src/components/ui/button.tsx",
+      "must_contain": [
+        "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[10px] text-[13px]"
+      ]
+    },
+    {
+      "hook": "Button default",
+      "file": "src/components/ui/button.tsx",
+      "must_contain": [
+        "default: \"bg-primary text-primary-foreground"
+      ]
+    },
+    {
+      "hook": "Button gradient",
+      "file": "src/components/ui/button.tsx",
+      "must_contain": [
+        "gradient: \"bg-primary-gradient"
+      ]
+    },
+    {
+      "hook": "Button outline",
+      "file": "src/components/ui/button.tsx",
+      "must_contain": [
+        "outline: \"border border-border bg-card"
+      ]
+    },
+    {
+      "hook": "Button destructive",
+      "file": "src/components/ui/button.tsx",
+      "must_contain": [
+        "destructive: \"bg-destructive"
+      ]
+    },
+    {
+      "hook": "Input",
+      "file": "src/components/ui/input.tsx",
+      "must_contain": [
+        "rounded-[10px] border border-border"
+      ]
+    },
+    {
+      "hook": "Select trigger",
+      "file": "src/components/ui/select.tsx",
+      "must_contain": [
+        "SelectPrimitive.Trigger",
+        "rounded-[10px]"
+      ]
+    },
+    {
+      "hook": "Table wrapper",
+      "file": "src/components/ui/table.tsx",
+      "must_contain": [
+        "relative w-full overflow-auto rounded-xl ring-1 ring-border/60 bg-card"
+      ]
+    },
+    {
+      "hook": "Table row selected",
+      "file": "src/components/ui/table.tsx",
+      "must_contain": [
+        "data-[state=selected]"
+      ]
+    },
+    {
+      "hook": "Tabs list",
+      "file": "src/components/ui/tabs.tsx",
+      "must_contain": [
+        "TabsPrimitive.List",
+        "inline-flex h-10 items-center justify-center rounded-md bg-muted"
+      ]
+    },
+    {
+      "hook": "Tabs trigger",
+      "file": "src/components/ui/tabs.tsx",
+      "must_contain": [
+        "TabsPrimitive.Trigger",
+        "rounded-sm px-3 py-1.5"
+      ]
+    },
+    {
+      "hook": "Sidebar root",
+      "file": "src/components/sidebar.tsx",
+      "must_contain": [
+        "bg-card border-r border-border flex flex-col h-full"
+      ]
+    },
+    {
+      "hook": "Sidebar active item",
+      "file": "src/components/sidebar.tsx",
+      "must_contain": [
+        "bg-primary-gradient text-white",
+        "text-muted-foreground hover:bg-accent",
+        "rounded-lg"
+      ]
+    },
+    {
+      "hook": "Checkbox",
+      "file": "src/components/ui/checkbox.tsx",
+      "must_contain": [
+        "CheckboxPrimitive.Root",
+        "rounded-sm"
+      ]
+    },
+    {
+      "hook": "Switch data-slot",
+      "file": "src/components/ui/switch.tsx",
+      "must_contain": [
+        "data-slot=\"hs-switch\""
+      ]
+    },
+    {
+      "hook": "Dialog overlay",
+      "file": "src/components/ui/dialog.tsx",
+      "must_contain": [
+        "fixed inset-0 z-50 bg-black/60"
+      ]
+    },
+    {
+      "hook": "Dialog content",
+      "file": "src/components/ui/dialog.tsx",
+      "must_contain": [
+        "DialogPrimitive.Content",
+        "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg"
+      ]
+    },
+    {
+      "hook": "Alert dialog content",
+      "file": "src/components/ui/alert-dialog.tsx",
+      "must_contain": [
+        "AlertDialogPrimitive.Content"
+      ]
+    },
+    {
+      "hook": "Popover content",
+      "file": "src/components/ui/popover.tsx",
+      "must_contain": [
+        "PopoverPrimitive.Content",
+        "rounded-[10px] border border-border bg-popover"
+      ]
+    },
+    {
+      "hook": "Dropdown menu content",
+      "file": "src/components/ui/dropdown-menu.tsx",
+      "must_contain": [
+        "DropdownMenuPrimitive.Content",
+        "rounded-[10px] border border-border bg-popover"
+      ]
+    },
+    {
+      "hook": "Select content",
+      "file": "src/components/ui/select.tsx",
+      "must_contain": [
+        "SelectPrimitive.Content"
+      ]
+    },
+    {
+      "hook": "Sonner toaster",
+      "file": "src/components/ui/sonner.tsx",
+      "must_contain": [
+        "className=\"toaster group\"",
+        "error: \"!bg-destructive"
+      ]
+    },
+    {
+      "hook": "Header bar",
+      "file": "src/components/bank-selector.tsx",
+      "must_contain": [
+        "bg-card text-card-foreground px-5 py-3 border-b-4 border-primary-gradient"
+      ]
+    },
+    {
+      "hook": "Theme class toggle",
+      "file": "src/lib/theme-context.tsx",
+      "must_contain": [
+        "classList.toggle(\"dark\""
+      ]
+    }
+  ],
+  "anchors": [
+    {
+      "file": "src/app/[locale]/layout.tsx",
+      "marker": "import \"@/ccc/theme.css\";",
+      "count": 1
+    },
+    {
+      "file": "src/app/[locale]/layout.tsx",
+      "marker": "variable: \"--font-sora\"",
+      "count": 1
+    },
+    {
+      "file": "src/app/[locale]/layout.tsx",
+      "marker": "${sora.variable}",
+      "count": 1
+    },
+    {
+      "file": "src/app/layout.tsx",
+      "marker": "ccc(brand)",
+      "count": 1
+    },
+    {
+      "file": "src/app/layout.tsx",
+      "marker": "/ccc/favicon.png",
+      "count": 1
+    },
+    {
+      "file": "src/components/bank-selector.tsx",
+      "marker": "ccc(brand)",
+      "count": 2
+    },
+    {
+      "file": "src/components/bank-selector.tsx",
+      "marker": "ccc-wordmark ccc-wordmark--bar",
+      "count": 2
+    },
+    {
+      "file": "src/app/[locale]/login/page.tsx",
+      "marker": "ccc(brand)",
+      "count": 1
+    },
+    {
+      "file": "src/components/ui/spinner.tsx",
+      "marker": "/ccc/cortana-mark.png",
+      "count": 1
+    },
+    {
+      "file": "src/app/api/banks/route.ts",
+      "marker": "from \"@/ccc/",
+      "count": 1
+    },
+    {
+      "file": "src/app/[locale]/banks/[bankId]/page.tsx",
+      "marker": "from \"@/ccc/",
+      "count": 1
+    },
+    {
+      "file": "src/components/think-view.tsx",
+      "marker": "from \"@/ccc/reflect-state\"",
+      "count": 1
+    },
+    {
+      "file": "src/components/documents-view.tsx",
+      "marker": "from \"@/lib/documents-request-gate\"",
+      "count": 1
+    }
+  ],
+  "built_css": {
+    "glob": "standalone/.next/static/chunks/*.css",
+    "theme_marker": "--ccc-accent",
+    "forbidden_outside_theme": [
+      "#f97316",
+      "#e65100",
+      "#ffa45c",
+      "#ff8a3d",
+      "#ff7a1a"
+    ],
+    "theme_must_contain": [
+      "font-style:normal",
+      "--font-sora"
+    ]
+  }
+}
