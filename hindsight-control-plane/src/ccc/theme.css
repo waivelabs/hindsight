@@ -1,0 +1,266 @@
+/* CCC theme overlay — Layer A (WAI-996).
+ *
+ * Waive palette for the Cortana control plane. This file only redefines the
+ * CSS custom properties that globals.css declares (shadcn tokens, --hs-*,
+ * --chip-*, --sidebar-*), so every bg-card / text-foreground / border-border
+ * utility and every --hs-* consumer picks up the palette without touching a
+ * component. It is imported from [locale]/layout.tsx AFTER globals.css, so at
+ * equal specificity (:root / .dark) these declarations win.
+ *
+ * Theme mapping: Hindsight toggles `.dark` on <html>. Waive Dusk == .dark,
+ * Waive Dawn == :root (light). Source of truth for the values:
+ * cortana-v3/lanes/waive-theme-20261013/design/DESIGN-LANGUAGE.md §2 and
+ * waive-ui-internal/assets/waive-ui.css.
+ *
+ * Containment: new file under src/ccc/. One anchored import line in
+ * [locale]/layout.tsx. No upstream file is edited for Layer A.
+ */
+
+:root {
+  /* ---- Dawn (light) ---- */
+  --background: #fff8f1;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --primary: #3179f5;
+  --primary-foreground: #ffffff;
+  /* Flat blue. The blue→teal gradient is retired; the utility classes that
+     consume this variable keep working, they just render solid. */
+  --primary-gradient: linear-gradient(135deg, #3179f5 0%, #3179f5 100%);
+  --secondary: #f6f8fc;
+  --secondary-foreground: #0f172a;
+  --muted: #f4f7fd;
+  --muted-foreground: #44506a; /* ink-2: 8.9:1 on page, AA at every size */
+  --accent: #f6f8fc;
+  --accent-foreground: #0f172a;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --border: rgba(15, 23, 42, 0.1); /* line */
+  --input: rgba(15, 23, 42, 0.16); /* line-2 */
+  --ring: #3179f5;
+  --chart-1: #3179f5; /* ocean blue */
+  --chart-2: #5e6ad2; /* whisper */
+  --chart-3: #ff7a1a; /* sun */
+  --chart-4: #d9870b; /* amber */
+  --chart-5: #0d43aa; /* deep blue */
+
+  --chip-tag: #f6f8fc;
+  --chip-tag-border: rgba(15, 23, 42, 0.16);
+  --chip-entity: #eef1fb; /* indigo-ward, toward whisper */
+  --chip-entity-border: rgba(94, 106, 210, 0.28);
+  --chip-meta: #fafbfd;
+  --chip-meta-border: rgba(15, 23, 42, 0.1);
+  --chip-fg: #6b7790; /* ink-3 */
+  --chip-accent: #e65100; /* accent: the one chip that is filtering */
+
+  --sidebar: #f4f7fd; /* sunk */
+  --sidebar-foreground: #44506a;
+  --sidebar-primary: #3179f5;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #ffffff;
+  --sidebar-accent-foreground: #0f172a;
+  --sidebar-border: rgba(15, 23, 42, 0.1);
+  --sidebar-ring: #3179f5;
+
+  --radius: 0.5rem; /* controls stay 8px; cards 12 via --radius-lg */
+  --shadow-color: #0f172a;
+  --shadow-opacity: 0.08;
+  --shadow-2xs: 0 1px 0 rgba(15, 23, 42, 0.04);
+  --shadow-xs: 0 1px 0 rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 6px 16px -8px rgba(15, 23, 42, 0.16);
+  --shadow-lg: 0 18px 44px -12px rgba(15, 23, 42, 0.22);
+  --shadow-xl: 0 40px 120px -40px rgba(15, 23, 42, 0.35);
+  --shadow-2xl: 0 40px 120px -40px rgba(15, 23, 42, 0.45);
+
+  --hs-surface-page: #fff8f1;
+  --hs-surface-card: #ffffff;
+  --hs-surface-sidebar: #f4f7fd;
+  --hs-surface-hover: #f6f8fc;
+  --hs-surface-muted: #f4f7fd;
+  --hs-fg-primary: #0f172a;
+  --hs-fg-muted: #6b7790;
+  --hs-fg-on-accent: #ffffff;
+  --hs-border-default: rgba(15, 23, 42, 0.1);
+  --hs-border-subtle: rgba(15, 23, 42, 0.06);
+  --hs-success: #15803d;
+  --hs-warning: #b45309;
+  --hs-danger: #dc2626;
+  --hs-info: #3179f5;
+  --hs-neutral: #6b7790;
+  --hs-brand-blue: #3179f5;
+  --hs-brand-teal: #5e6ad2; /* teal retired → whisper takes its slot */
+  --hs-chart-world: #3179f5;
+  --hs-chart-experience: #5e6ad2;
+  --hs-chart-observations: #ff7a1a;
+  --hs-chart-temporal: #5e6ad2;
+  --hs-chart-semantic: #3179f5;
+  --hs-chart-entity: #ff7a1a;
+
+  /* Waive extras that components in src/ccc/ may use. Dawn values. */
+  --ccc-accent: #e65100;
+  --ccc-accent-ink: #ffffff;
+  --ccc-sun: #ff7a1a;
+  --ccc-amber: #d9870b;
+  --ccc-blue: #3179f5;
+  --ccc-blue-deep: #0d43aa;
+  --ccc-whisper: #5e6ad2;
+  --ccc-ink-2: #44506a;
+  --ccc-ink-3: #6b7790;
+  --ccc-ink-4: #98a2b6;
+  --ccc-line-2: rgba(15, 23, 42, 0.16);
+  --ccc-line-3: rgba(15, 23, 42, 0.26);
+  --ccc-elev: #ffffff;
+  --ccc-scrim: rgba(15, 23, 42, 0.38);
+  --ccc-ease: cubic-bezier(0.2, 0.7, 0.1, 1);
+  --ccc-ease-io: cubic-bezier(0.65, 0, 0.35, 1);
+  --ccc-d-micro: 120ms;
+  --ccc-d-state: 200ms;
+  --ccc-d-panel: 320ms;
+  --ccc-d-reveal: 650ms;
+}
+
+.dark {
+  /* ---- Dusk (dark, default brand) ---- */
+  --background: #161b26;
+  --foreground: #e9eef7;
+  --card: #1b2130;
+  --card-foreground: #e9eef7;
+  --popover: #273047; /* elevated */
+  --popover-foreground: #e9eef7;
+  --primary: #7aa7f8; /* link/info blue on dark */
+  --primary-foreground: #161b26;
+  --primary-gradient: linear-gradient(135deg, #3179f5 0%, #3179f5 100%);
+  --secondary: #222a3b;
+  --secondary-foreground: #e9eef7;
+  --muted: #222a3b;
+  --muted-foreground: #b3bfd3; /* ink-2 */
+  --accent: #222a3b;
+  --accent-foreground: #e9eef7;
+  --destructive: #f87171;
+  --destructive-foreground: #161b26;
+  --border: rgba(148, 163, 184, 0.14);
+  --input: rgba(148, 163, 184, 0.22);
+  --ring: #7aa7f8;
+  --chart-1: #3179f5;
+  --chart-2: #5e6ad2;
+  --chart-3: #ff8a3d;
+  --chart-4: #ffb454;
+  --chart-5: #3a5fa8;
+
+  --chip-tag: #222a3b;
+  --chip-tag-border: rgba(148, 163, 184, 0.22);
+  --chip-entity: #242b42;
+  --chip-entity-border: rgba(94, 106, 210, 0.45);
+  --chip-meta: #1b2130;
+  --chip-meta-border: rgba(148, 163, 184, 0.14);
+  --chip-fg: #8593ab;
+  --chip-accent: #ffa45c;
+
+  --sidebar: #10141e; /* sunk */
+  --sidebar-foreground: #8593ab;
+  --sidebar-primary: #7aa7f8;
+  --sidebar-primary-foreground: #161b26;
+  --sidebar-accent: #1b2130;
+  --sidebar-accent-foreground: #e9eef7;
+  --sidebar-border: rgba(148, 163, 184, 0.14);
+  --sidebar-ring: #7aa7f8;
+
+  --shadow-color: #000000;
+  --shadow-opacity: 0.55;
+  --shadow-2xs: 0 1px 0 rgba(255, 255, 255, 0.03) inset;
+  --shadow-xs: 0 1px 0 rgba(255, 255, 255, 0.03) inset;
+  --shadow-sm: 0 1px 0 rgba(255, 255, 255, 0.03) inset;
+  --shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset;
+  --shadow-md: 0 10px 24px -12px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 18px 44px -12px rgba(0, 0, 0, 0.55);
+  --shadow-xl: 0 40px 120px -40px rgba(0, 0, 0, 0.8);
+  --shadow-2xl: 0 40px 120px -40px rgba(0, 0, 0, 0.9);
+
+  --hs-surface-page: #161b26;
+  --hs-surface-card: #1b2130;
+  --hs-surface-sidebar: #10141e;
+  --hs-surface-hover: #222a3b;
+  --hs-surface-muted: #10141e;
+  --hs-fg-primary: #e9eef7;
+  --hs-fg-muted: #8593ab;
+  --hs-fg-on-accent: #161b26;
+  --hs-border-default: rgba(148, 163, 184, 0.14);
+  --hs-border-subtle: rgba(148, 163, 184, 0.08);
+  --hs-success: #4ade80;
+  --hs-warning: #fbbf24;
+  --hs-danger: #f87171;
+  --hs-info: #7aa7f8;
+  --hs-neutral: #8593ab;
+  --hs-brand-blue: #3179f5;
+  --hs-brand-teal: #5e6ad2;
+  --hs-chart-world: #3179f5;
+  --hs-chart-experience: #5e6ad2;
+  --hs-chart-observations: #ff8a3d;
+  --hs-chart-temporal: #5e6ad2;
+  --hs-chart-semantic: #3179f5;
+  --hs-chart-entity: #ff8a3d;
+
+  --ccc-accent: #ffa45c;
+  --ccc-accent-ink: #1a0f08;
+  --ccc-sun: #ff8a3d;
+  --ccc-amber: #ffb454;
+  --ccc-blue: #7aa7f8;
+  --ccc-blue-deep: #3a5fa8;
+  --ccc-whisper: #5e6ad2;
+  --ccc-ink-2: #b3bfd3;
+  --ccc-ink-3: #8593ab;
+  --ccc-ink-4: #5d6a83;
+  --ccc-line-2: rgba(148, 163, 184, 0.22);
+  --ccc-line-3: rgba(148, 163, 184, 0.34);
+  --ccc-elev: #273047;
+  --ccc-scrim: rgba(5, 8, 15, 0.62);
+}
+
+/* Type. Sora 600 for headings: next/font sets --font-sora on <html> in
+   [locale]/layout.tsx. Body and numbers stay Inter; meta stays JetBrains Mono.
+   No italics anywhere: emphasis is weight or color. */
+h1,
+h2,
+h3,
+.font-heading {
+  font-family: var(--font-sora), var(--font-sans), system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+em,
+i,
+.italic {
+  font-style: normal;
+}
+
+/* Switch track: flat blue when checked (the gradient is solid now), neutral
+   line when unchecked. Keeps the upstream selector so no component changes. */
+[data-slot="hs-switch"][data-state="unchecked"] {
+  background-color: rgba(15, 23, 42, 0.18);
+}
+.dark [data-slot="hs-switch"][data-state="unchecked"] {
+  background-color: rgba(148, 163, 184, 0.28);
+}
+
+/* Focus: 2px page gap + 2px blue, the kit's --wui-focus. Applies to the
+   shadcn ring utilities through --ring; this covers native focus-visible. */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Motion: honor the OS setting for everything that moves in the app. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,4 +1,4 @@
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono, Sora } from "next/font/google";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -7,6 +7,8 @@ import { BankProvider } from "@/lib/bank-context";
 import { FeaturesProvider } from "@/lib/features-context";
 import { ThemeProvider } from "@/lib/theme-context";
 import { Toaster } from "@/components/ui/sonner";
+// ccc(theme): Waive palette overlay, loaded after globals.css so its tokens win.
+import "@/ccc/theme.css";
 
 // Inter preloaded server-side so every weight (400/500/600/700) is ready
 // before paint. The Google Fonts @import this replaces loaded weights lazily,
@@ -23,6 +25,14 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   weight: ["400", "500"],
   variable: "--font-mono",
+  display: "swap",
+});
+
+// ccc(theme): Sora 600 for headings (src/ccc/theme.css reads --font-sora).
+const sora = Sora({
+  subsets: ["latin"],
+  weight: ["600"],
+  variable: "--font-sora",
   display: "swap",
 });
 
@@ -62,7 +72,7 @@ export default async function LocaleLayout({
   return (
     <html
       lang={locale}
-      className={`${inter.variable} ${jetbrainsMono.variable}`}
+      className={`${inter.variable} ${jetbrainsMono.variable} ${sora.variable}`}
       suppressHydrationWarning
     >
       <body className="bg-background text-foreground">
