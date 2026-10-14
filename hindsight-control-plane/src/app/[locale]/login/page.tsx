@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { sanitizeReturnTo, withBasePath } from "@/lib/base-path";
-import Image from "next/image";
 
 function LoginForm() {
   const t = useTranslations("login");
@@ -61,14 +60,15 @@ function LoginForm() {
       </div>
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <Image
-            src={withBasePath("/logo.png")}
-            alt="Hindsight"
-            width={160}
-            height={160}
-            className="mx-auto"
-            unoptimized
-          />
+          {/* ccc(brand): Cortana stacked lockup. */}
+          <div className="mx-auto flex flex-col items-center">
+            <img
+              src={withBasePath("/ccc/cortana-mark.png")}
+              alt="Cortana"
+              className="h-24 w-auto"
+            />
+            <span className="ccc-wordmark ccc-wordmark--stack" aria-hidden="true" />
+          </div>
           <CardDescription>{t("description")}</CardDescription>
         </CardHeader>
         <CardContent>

@@ -766,3 +766,33 @@ html.dark {
   --color-stone-900: #161b26;
   --color-stone-950: #10141e;
 }
+
+/* ---- Brand: Cortana wordmark (WAI-998) ---------------------------------
+   The wordmark is Space Grotesk Light, lowercase, outlined glyphs, used as a
+   mask over currentColor so it takes the theme ink (light on Dusk, dark on
+   Dawn) from one asset. Geometry from brand/lockup/TYPE.md: horizontal = mark
+   ink 2.6 cap, gap .9 cap, x-height centred on the mark; stacked = word under
+   the mark, gap .9 cap. The SVG viewBox is trimmed to the glyphs (422 × 76
+   units; cap ≈ 69 units, x-height band centre ≈ 46 units from the top). */
+.ccc-wordmark {
+  display: inline-block;
+  flex: none;
+  background-color: currentColor;
+  -webkit-mask: url("./assets/cortana-wordmark.svg") no-repeat center / contain;
+  mask: url("./assets/cortana-wordmark.svg") no-repeat center / contain;
+}
+/* Header bar: mark is h-10 (40px) → cap 15.4px → scale .223 px/unit. */
+.ccc-wordmark--bar {
+  width: 94px;
+  height: 17px;
+  margin-left: 14px;
+  transform: translateY(1.8px);
+  color: var(--foreground);
+}
+/* Login card: mark is h-24 (96px) → cap 29.5px → scale .428 px/unit. */
+.ccc-wordmark--stack {
+  width: 181px;
+  height: 33px;
+  margin-top: 27px;
+  color: var(--foreground);
+}

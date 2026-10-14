@@ -57,7 +57,6 @@ import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
 import { useTheme } from "@/lib/theme-context";
 import { useFeatures } from "@/lib/features-context";
-import Image from "next/image";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -571,21 +570,16 @@ function BankSelectorInner() {
           title={tNavBank("allBanks")}
           onClick={() => router.push("/dashboard")}
         >
+          {/* ccc(brand): Cortana lockup. Mark PNG spins; wordmark is a
+              currentColor mask (src/ccc/theme.css .ccc-wordmark) so it
+              follows the theme ink without a second asset. */}
           <img
-            src={withBasePath("/favicon.png")}
+            src={withBasePath("/ccc/cortana-mark.png")}
             alt=""
             className={cn("h-10 w-auto", logoSpinning && "animate-logo-wiggle")}
             onAnimationEnd={() => setLogoSpinning(false)}
           />
-          <div
-            className="h-10 w-[99px]"
-            style={{
-              backgroundImage: `url(${withBasePath("/logo.png")})`,
-              backgroundSize: "auto 100%",
-              backgroundPosition: "right center",
-              backgroundRepeat: "no-repeat",
-            }}
-          />
+          <span className="ccc-wordmark ccc-wordmark--bar" aria-hidden="true" />
         </button>
 
         {/* Separator */}
@@ -1580,14 +1574,13 @@ export function BankSelector() {
       fallback={
         <div className="bg-card text-card-foreground px-5 py-3 border-b-4 border-primary-gradient">
           <div className="flex items-center gap-4 text-sm">
-            <Image
-              src={withBasePath("/logo.png")}
-              alt="Hindsight"
-              width={40}
-              height={40}
+            {/* ccc(brand): Cortana lockup (static fallback while loading). */}
+            <img
+              src={withBasePath("/ccc/cortana-mark.png")}
+              alt="Cortana"
               className="h-10 w-auto"
-              unoptimized
             />
+            <span className="ccc-wordmark ccc-wordmark--bar" aria-hidden="true" />
             <div className="h-8 w-px bg-border" />
             <Button
               variant="outline"

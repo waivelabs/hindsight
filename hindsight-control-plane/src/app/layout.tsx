@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Hindsight Control Plane",
-  description: "Control plane for the temporal semantic memory system",
+  // ccc(brand): Cortana title and favicon.
+  title: "Cortana",
+  description: "Cortana memory control plane",
   icons: {
-    icon: "/favicon.png",
+    icon: "/ccc/favicon.png",
   },
 };
 

@@ -34,7 +34,7 @@ export function Spinner({
     // that fights the CSS transform animation (and adds no value for a tiny
     // static, already-optimized PNG served from /public).
     <img
-      src={withBasePath("/favicon.png")}
+      src={withBasePath("/ccc/cortana-mark.png")} /* ccc(brand) */
       alt=""
       role="status"
       aria-label="Loading"
