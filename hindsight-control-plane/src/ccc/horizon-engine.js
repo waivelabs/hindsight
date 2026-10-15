@@ -124,7 +124,8 @@ export function buildFromGraph(data, opts = {}) {
   let raw = (data.links || []).filter(
     (l) => index.has(l.source) && index.has(l.target) && l.source !== l.target
   );
-  const maxEdges = opts.maxEdges || 80000;
+  // edge budget: ~3 per node, 20k–80k. Weight-sorted, so the strongest links stay.
+  const maxEdges = opts.maxEdges || Math.max(20000, Math.min(80000, 3 * N));
   if (raw.length > maxEdges)
     raw = raw
       .slice()
@@ -163,6 +164,9 @@ export function buildFromGraph(data, opts = {}) {
   );
   const rank = new Float32Array(N);
   for (let r = 0; r < N; r++) rank[order[r]] = N > 1 ? r / (N - 1) : 0.5;
+  // colour follows the recency RANK (quantile): live banks are skewed to the last
+  // days, so linear time would paint almost everything blue. Tie-free order.
+  for (let i = 0; i < N; i++) if (hasHeat[i]) heat[i] = rank[i];
   // clusters per strand (plate: ~8 + sqrt(N)/7 around the whole ring)
   const K = Math.max(4, Math.min(24, Math.round((8 + Math.sqrt(N) / 7) / 2)));
   // loose nodes: the least-connected 8% ride the filaments between clusters
@@ -190,9 +194,30 @@ export function buildFromGraph(data, opts = {}) {
   // a topic keeps one strand — unless there are so few topics (fact types on
   // Home) that this would leave a strand empty; then split by id.
   const distinct = new Set(keys).size;
+  // uneven bin widths per strand so cluster masses vary like the plate: the
+  // oldest and newest masses are the biggest, one more in the middle.
+  const edges = [];
+  for (let st = 0; st < 2; st++) {
+    const wr = rng(hash32("bins" + st + ":" + K));
+    const ws = [];
+    let sum = 0;
+    for (let k = 0; k < K; k++) {
+      let w = 0.35 + Math.pow(wr(), 2.2) * 2.2;
+      if (k === 0 || k === K - 1) w *= 1.9;
+      if (k === Math.round(K / 2)) w *= 1.6;
+      ws.push(w);
+      sum += w;
+    }
+    const e = [0];
+    for (let k = 0; k < K; k++) e.push(e[k] + ws[k] / sum);
+    e[K] = 1.0001;
+    edges.push(e);
+  }
   for (let i = 0; i < N; i++) {
     const strand = (keys[i] && distinct >= 6 ? hash32(keys[i]) : hash32(nodes[i].id)) & 1;
-    const b = Math.min(K - 1, Math.floor(rank[i] * K));
+    const e = edges[strand];
+    let b = 0;
+    while (b < K - 1 && rank[i] >= e[b + 1]) b++;
     const id = strand * K + b;
     binOf[i] = id;
     if (!bins.has(id)) bins.set(id, { id, strand, b, members: [], groups: new Map() });
@@ -207,7 +232,8 @@ export function buildFromGraph(data, opts = {}) {
   let cidx = 0;
   for (const bin of bins.values()) {
     const r = rng(hash32("bin" + bin.id) ^ 0x9e3779b9);
-    const rc = (bin.b + 0.5) / K;
+    const be = edges[bin.strand],
+      rc = (be[bin.b] + be[bin.b + 1]) / 2;
     const uc = bin.strand === 0 ? 0.5 * rc : 1 - 0.5 * rc;
     const coff = gauss(r) * 0.11;
     const d = depth(uc),
@@ -239,7 +265,9 @@ export function buildFromGraph(data, opts = {}) {
       let dt, dn;
       if (loose[i] && i !== best) {
         // on the filament at its own recency, tiny jitter, no cluster offset
-        const uu = wrap(uc + (rank[i] * K - bin.b - 0.5) / K / 2);
+        const e = edges[bin.strand],
+          frac = (rank[i] - e[bin.b]) / Math.max(1e-6, e[bin.b + 1] - e[bin.b]);
+        const uu = wrap(uc + ((frac - 0.5) * (e[bin.b + 1] - e[bin.b])) / 2);
         nu[i] = uu;
         noff[i] = gauss(nr) * 0.03;
         ndt[i] = gauss(nr) * 4;
@@ -805,7 +833,8 @@ export function mount(host, graph, opts = {}) {
         g.x[i] = px * CR - py * SR + cdx[ci] + Math.sin(t * P30 * 1.7 + g.ph[i]) * amp * 0.5;
         g.y[i] = px * SR + py * CR + cdy[ci] + Math.cos(t * P30 * 1.3 + g.ph[i]) * amp * 0.3;
       }
-      if (dirty || (S.frames & 1) === 0) drawEdges(g, dim0);
+      const every = Math.max(2, Math.round(g.L / 25000));
+      if (dirty || S.frames % every === 0) drawEdges(g, dim0);
       drawNodes(g, t, focus, dim0);
       if (dirty) dirty--;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
