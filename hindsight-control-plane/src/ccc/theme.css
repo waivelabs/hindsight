@@ -26,10 +26,11 @@
   --card-foreground: #0f172a;
   --popover: #ffffff;
   --popover-foreground: #0f172a;
-  /* Text blue (WAI-1064): #3179f5 is 3.77–4.05:1 on Dawn surfaces, so text and
-     the white-text fill use #1063f3 (≥ 4.54:1 on every surface, white 5.12:1).
-     The swatch #3179f5 stays for non-text uses: ring, rules, bars, charts. */
-  --primary: #1063f3;
+  /* Text blue (WAI-1064): #3179f5 is 3.77–4.05:1 on Dawn surfaces. Text uses
+     #0b52c9: ≥ 6.07:1 on every surface and ≥ 4.66:1 on its own 5–20 % tints
+     (badges); white on it 6.85:1. Button fills use --ccc-blue-fill. The swatch
+     #3179f5 stays for non-text uses: ring, rules, bars, charts. */
+  --primary: #0b52c9;
   --primary-foreground: #ffffff;
   /* Flat blue. The blue→teal gradient is retired; the utility classes that
      consume this variable keep working, they just render solid. */
@@ -64,7 +65,7 @@
 
   --sidebar: #f4f7fd; /* sunk */
   --sidebar-foreground: #44506a;
-  --sidebar-primary: #1063f3;
+  --sidebar-primary: #0b52c9;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #ffffff;
   --sidebar-accent-foreground: #0f172a;
@@ -112,7 +113,7 @@
   --ccc-accent-ink: #ffffff;
   --ccc-blue-solid: #3179f5; /* swatch: non-text fills (checkbox), 3:1 */
   --ccc-blue-fill: #1063f3; /* fills that carry white text: 5.12:1 */
-  --ccc-blue-text: #1063f3; /* blue text: ≥ 4.54:1 on every Dawn surface */
+  --ccc-blue-text: #0b52c9; /* blue text: ≥ 6.07:1 on every Dawn surface */
   --ccc-input: #ffffff;
   --ccc-r-card: 12px;
   --ccc-r-ctl: 8px;
@@ -400,7 +401,8 @@ html:root {
   --color-blue-300: color-mix(in srgb, #3179f5 38%, #ffffff);
   --color-blue-400: color-mix(in srgb, #3179f5 78%, #ffffff);
   --color-blue-500: #3179f5;
-  --color-blue-600: color-mix(in srgb, #3179f5 86%, #0f172a);
+  /* blue/sky/cyan/teal 600 = the 700 mix: text on its 500/10 tint 5.08:1 (86 % was 4.12:1). */
+  --color-blue-600: color-mix(in srgb, #3179f5 72%, #0f172a);
   --color-blue-700: color-mix(in srgb, #3179f5 72%, #0f172a);
   --color-blue-800: color-mix(in srgb, #3179f5 58%, #0f172a);
   --color-blue-900: color-mix(in srgb, #3179f5 44%, #0f172a);
@@ -411,7 +413,7 @@ html:root {
   --color-sky-300: color-mix(in srgb, #3179f5 38%, #ffffff);
   --color-sky-400: color-mix(in srgb, #3179f5 78%, #ffffff);
   --color-sky-500: #3179f5;
-  --color-sky-600: color-mix(in srgb, #3179f5 86%, #0f172a);
+  --color-sky-600: color-mix(in srgb, #3179f5 72%, #0f172a);
   --color-sky-700: color-mix(in srgb, #3179f5 72%, #0f172a);
   --color-sky-800: color-mix(in srgb, #3179f5 58%, #0f172a);
   --color-sky-900: color-mix(in srgb, #3179f5 44%, #0f172a);
@@ -422,7 +424,7 @@ html:root {
   --color-cyan-300: color-mix(in srgb, #3179f5 38%, #ffffff);
   --color-cyan-400: color-mix(in srgb, #3179f5 78%, #ffffff);
   --color-cyan-500: #3179f5;
-  --color-cyan-600: color-mix(in srgb, #3179f5 86%, #0f172a);
+  --color-cyan-600: color-mix(in srgb, #3179f5 72%, #0f172a);
   --color-cyan-700: color-mix(in srgb, #3179f5 72%, #0f172a);
   --color-cyan-800: color-mix(in srgb, #3179f5 58%, #0f172a);
   --color-cyan-900: color-mix(in srgb, #3179f5 44%, #0f172a);
@@ -433,7 +435,7 @@ html:root {
   --color-teal-300: color-mix(in srgb, #3179f5 38%, #ffffff);
   --color-teal-400: color-mix(in srgb, #3179f5 78%, #ffffff);
   --color-teal-500: #3179f5;
-  --color-teal-600: color-mix(in srgb, #3179f5 86%, #0f172a);
+  --color-teal-600: color-mix(in srgb, #3179f5 72%, #0f172a);
   --color-teal-700: color-mix(in srgb, #3179f5 72%, #0f172a);
   --color-teal-800: color-mix(in srgb, #3179f5 58%, #0f172a);
   --color-teal-900: color-mix(in srgb, #3179f5 44%, #0f172a);
