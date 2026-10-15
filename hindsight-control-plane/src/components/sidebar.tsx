@@ -19,6 +19,7 @@ import {
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { client } from "@/lib/api";
+import { SidebarBrand } from "@/ccc/SidebarBrand";
 
 type NavItem =
   | "home"
@@ -137,17 +138,8 @@ export function Sidebar({ currentTab, onTabChange }: SidebarProps) {
       {/* Collapse/Expand button at bottom — kept as an explicit affordance
           alongside the ambient click-to-toggle on the aside chrome. */}
       <div className="p-3 border-t border-border">
-        {apiVersion && (
-          <div
-            className={cn(
-              "mb-2 text-xs text-muted-foreground/60 text-center select-none",
-              isCollapsed ? "px-0" : "px-1"
-            )}
-            title={`Hindsight API v${apiVersion}`}
-          >
-            {isCollapsed ? `v${apiVersion}` : `Hindsight v${apiVersion}`}
-          </div>
-        )}
+        {/* ccc(brand): Cortana lockup and the API version replace "Hindsight v…". */}
+        <SidebarBrand collapsed={isCollapsed} version={apiVersion} />
         <button
           onClick={(e) => {
             // Don't double-toggle when the aside's onClick also fires.

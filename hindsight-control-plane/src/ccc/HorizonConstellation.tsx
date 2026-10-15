@@ -100,7 +100,9 @@ export function HorizonConstellation({
     }
     const r = wrap.getBoundingClientRect();
     tip.textContent = node.label || node.id;
-    tip.style.left = Math.min(e.clientX - r.left + 14, r.width - 300) + "px";
+    // keep the whole tip inside the canvas, also on a narrow host
+    const w = Math.min(tip.offsetWidth || 300, r.width - 16);
+    tip.style.left = Math.max(8, Math.min(e.clientX - r.left + 14, r.width - w - 8)) + "px";
     tip.style.top = e.clientY - r.top + 14 + "px";
     tip.setAttribute("data-open", "true");
   }, []);
@@ -194,60 +196,64 @@ export function HorizonConstellation({
       data-ccc-constellation
     >
       <div ref={hostRef} className="ccc-cv__host" />
-      <div className="ccc-cv__hint">{t("instructions")}</div>
-      <div className="ccc-cv__tools">
-        {cccLimit && (
-          <div className="ccc-seg" role="group">
-            {(cccLimit.options || DEFAULT_OPTIONS).map((n) => (
-              <button
-                key={n}
-                type="button"
-                aria-pressed={cccLimit.value === n}
-                onClick={() => cccLimit.onChange(n)}
-              >
-                {n >= 1000 ? `${n / 1000}k` : n}
-              </button>
-            ))}
-          </div>
-        )}
-        <button type="button" className="ccc-btn" title={t("exportSvgTitle")} onClick={share}>
-          {t("exportSvgLabel")}
-        </button>
-        <button
-          type="button"
-          className="ccc-btn"
-          aria-pressed={paused}
-          title={paused ? t("resumeMotionTitle") : t("pauseMotionTitle")}
-          onClick={() => setPaused((p) => !p)}
-        >
-          {paused ? t("resumeMotionLabel") : t("pauseMotionLabel")}
-        </button>
-        <button
-          type="button"
-          className="ccc-btn"
-          title={fullscreen ? t("exitFullscreenTitle") : t("enterFullscreenTitle")}
-          onClick={toggleFullscreen}
-        >
-          {fullscreen ? t("exitFullscreenLabel") : t("enterFullscreenLabel")}
-        </button>
+      <div className="ccc-cv__top">
+        <div className="ccc-cv__hint">{t("instructions")}</div>
+        <div className="ccc-cv__tools">
+          {cccLimit && (
+            <div className="ccc-seg" role="group">
+              {(cccLimit.options || DEFAULT_OPTIONS).map((n) => (
+                <button
+                  key={n}
+                  type="button"
+                  aria-pressed={cccLimit.value === n}
+                  onClick={() => cccLimit.onChange(n)}
+                >
+                  {n >= 1000 ? `${n / 1000}k` : n}
+                </button>
+              ))}
+            </div>
+          )}
+          <button type="button" className="ccc-btn" title={t("exportSvgTitle")} onClick={share}>
+            {t("exportSvgLabel")}
+          </button>
+          <button
+            type="button"
+            className="ccc-btn"
+            aria-pressed={paused}
+            title={paused ? t("resumeMotionTitle") : t("pauseMotionTitle")}
+            onClick={() => setPaused((p) => !p)}
+          >
+            {paused ? t("resumeMotionLabel") : t("pauseMotionLabel")}
+          </button>
+          <button
+            type="button"
+            className="ccc-btn"
+            title={fullscreen ? t("exitFullscreenTitle") : t("enterFullscreenTitle")}
+            onClick={toggleFullscreen}
+          >
+            {fullscreen ? t("exitFullscreenLabel") : t("enterFullscreenLabel")}
+          </button>
+        </div>
       </div>
-      <div className="ccc-cv__hud">{hud}</div>
-      <div className="ccc-cv__legend">
-        {hasHeat && (
-          <span className="ccc-cv__ramp">
-            <span className="ccc-cv__lbl">{heatLegendLabel || t("legendLinks")}</span>
-            <span className="ccc-cv__ends">{heatLegendEndpoints?.[0] || t("legendFew")}</span>
-            <i style={{ background: rampCSS() }} />
-            <span className="ccc-cv__ends">{heatLegendEndpoints?.[1] || t("legendMany")}</span>
+      <div className="ccc-cv__foot">
+        <div className="ccc-cv__hud">{hud}</div>
+        <div className="ccc-cv__legend">
+          {hasHeat && (
+            <span className="ccc-cv__ramp">
+              <span className="ccc-cv__lbl">{heatLegendLabel || t("legendLinks")}</span>
+              <span className="ccc-cv__ends">{heatLegendEndpoints?.[0] || t("legendFew")}</span>
+              <i style={{ background: rampCSS() }} />
+              <span className="ccc-cv__ends">{heatLegendEndpoints?.[1] || t("legendMany")}</span>
+            </span>
+          )}
+          <span className="ccc-cv__lk">
+            {(["semantic", "temporal", "entity", "causal"] as const).map((k) => (
+              <i key={k} style={{ ["--c" as string]: linkColor(k) }}>
+                {t(`linkType${k[0].toUpperCase()}${k.slice(1)}` as "linkTypeSemantic")}
+              </i>
+            ))}
           </span>
-        )}
-        <span className="ccc-cv__lk">
-          {(["semantic", "temporal", "entity", "causal"] as const).map((k) => (
-            <i key={k} style={{ ["--c" as string]: linkColor(k) }}>
-              {t(`linkType${k[0].toUpperCase()}${k.slice(1)}` as "linkTypeSemantic")}
-            </i>
-          ))}
-        </span>
+        </div>
       </div>
       <div ref={tipRef} className="ccc-cv__tip" />
     </div>

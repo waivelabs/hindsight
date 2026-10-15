@@ -26,7 +26,10 @@
   --card-foreground: #0f172a;
   --popover: #ffffff;
   --popover-foreground: #0f172a;
-  --primary: #3179f5;
+  /* Text blue (WAI-1064): #3179f5 is 3.77–4.05:1 on Dawn surfaces, so text and
+     the white-text fill use #1063f3 (≥ 4.54:1 on every surface, white 5.12:1).
+     The swatch #3179f5 stays for non-text uses: ring, rules, bars, charts. */
+  --primary: #1063f3;
   --primary-foreground: #ffffff;
   /* Flat blue. The blue→teal gradient is retired; the utility classes that
      consume this variable keep working, they just render solid. */
@@ -54,12 +57,14 @@
   --chip-entity-border: rgba(94, 106, 210, 0.28);
   --chip-meta: #fafbfd;
   --chip-meta-border: rgba(15, 23, 42, 0.1);
-  --chip-fg: #6b7790; /* ink-3 */
-  --chip-accent: #e65100; /* accent: the one chip that is filtering */
+  --chip-fg: #636e85; /* ink-3 */
+  /* The selected chip (active filter, hover) is a selection: whisper, not the
+     accent (WAI-1064). #5461cf is the whisper hue at ≥ 4.67:1 on Dawn surfaces. */
+  --chip-accent: #5461cf;
 
   --sidebar: #f4f7fd; /* sunk */
   --sidebar-foreground: #44506a;
-  --sidebar-primary: #3179f5;
+  --sidebar-primary: #1063f3;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #ffffff;
   --sidebar-accent-foreground: #0f172a;
@@ -84,7 +89,7 @@
   --hs-surface-hover: #f6f8fc;
   --hs-surface-muted: #f4f7fd;
   --hs-fg-primary: #0f172a;
-  --hs-fg-muted: #6b7790;
+  --hs-fg-muted: #636e85;
   --hs-fg-on-accent: #ffffff;
   --hs-border-default: rgba(15, 23, 42, 0.1);
   --hs-border-subtle: rgba(15, 23, 42, 0.06);
@@ -92,7 +97,7 @@
   --hs-warning: #b45309;
   --hs-danger: #dc2626;
   --hs-info: #3179f5;
-  --hs-neutral: #6b7790;
+  --hs-neutral: #636e85;
   --hs-brand-blue: #3179f5;
   --hs-brand-teal: #5e6ad2; /* teal retired → whisper takes its slot */
   --hs-chart-world: #3179f5;
@@ -105,7 +110,9 @@
   /* Waive extras that components in src/ccc/ may use. Dawn values. */
   --ccc-accent: #e65100;
   --ccc-accent-ink: #ffffff;
-  --ccc-blue-solid: #3179f5;
+  --ccc-blue-solid: #3179f5; /* swatch: non-text fills (checkbox), 3:1 */
+  --ccc-blue-fill: #1063f3; /* fills that carry white text: 5.12:1 */
+  --ccc-blue-text: #1063f3; /* blue text: ≥ 4.54:1 on every Dawn surface */
   --ccc-input: #ffffff;
   --ccc-r-card: 12px;
   --ccc-r-ctl: 8px;
@@ -115,7 +122,7 @@
   --ccc-blue-deep: #0d43aa;
   --ccc-whisper: #5e6ad2;
   --ccc-ink-2: #44506a;
-  --ccc-ink-3: #6b7790;
+  --ccc-ink-3: #636e85; /* WAI-1064: #6b7790 was 3.99–4.35:1 on non-white surfaces */
   --ccc-ink-4: #98a2b6;
   --ccc-line-2: rgba(15, 23, 42, 0.16);
   --ccc-line-3: rgba(15, 23, 42, 0.26);
@@ -163,11 +170,11 @@
   --chip-entity-border: rgba(94, 106, 210, 0.45);
   --chip-meta: #1b2130;
   --chip-meta-border: rgba(148, 163, 184, 0.14);
-  --chip-fg: #8593ab;
-  --chip-accent: #ffa45c;
+  --chip-fg: #8c99b0;
+  --chip-accent: #8f97ea; /* whisper text on dark: ≥ 4.86:1 */
 
   --sidebar: #10141e; /* sunk */
-  --sidebar-foreground: #8593ab;
+  --sidebar-foreground: #8c99b0;
   --sidebar-primary: #7aa7f8;
   --sidebar-primary-foreground: #161b26;
   --sidebar-accent: #1b2130;
@@ -192,15 +199,15 @@
   --hs-surface-hover: #222a3b;
   --hs-surface-muted: #10141e;
   --hs-fg-primary: #e9eef7;
-  --hs-fg-muted: #8593ab;
-  --hs-fg-on-accent: #ffffff; /* on blue-solid fills */
+  --hs-fg-muted: #8c99b0;
+  --hs-fg-on-accent: #ffffff; /* on blue fills */
   --hs-border-default: rgba(148, 163, 184, 0.14);
   --hs-border-subtle: rgba(148, 163, 184, 0.08);
   --hs-success: #4ade80;
   --hs-warning: #fbbf24;
   --hs-danger: #f87171;
   --hs-info: #7aa7f8;
-  --hs-neutral: #8593ab;
+  --hs-neutral: #8c99b0;
   --hs-brand-blue: #3179f5;
   --hs-brand-teal: #5e6ad2;
   --hs-chart-world: #3179f5;
@@ -213,6 +220,8 @@
   --ccc-accent: #ffa45c;
   --ccc-accent-ink: #1a0f08;
   --ccc-blue-solid: #3179f5;
+  --ccc-blue-fill: #1063f3; /* same fill as Dawn: white 5.12:1 */
+  --ccc-blue-text: #7aa7f8;
   --ccc-input: #121725;
   --ccc-sun: #ff8a3d;
   --ccc-amber: #ffb454;
@@ -220,7 +229,7 @@
   --ccc-blue-deep: #3a5fa8;
   --ccc-whisper: #5e6ad2;
   --ccc-ink-2: #b3bfd3;
-  --ccc-ink-3: #8593ab;
+  --ccc-ink-3: #8c99b0; /* WAI-1064: #8593ab was 4.22:1 on the popover */
   --ccc-ink-4: #5d6a83;
   --ccc-line-2: rgba(148, 163, 184, 0.22);
   --ccc-line-3: rgba(148, 163, 184, 0.34);
@@ -478,7 +487,7 @@ html:root {
   --color-slate-200: #e4e9f2;
   --color-slate-300: #c7cfdd;
   --color-slate-400: #98a2b6;
-  --color-slate-500: #6b7790;
+  --color-slate-500: #636e85;
   --color-slate-600: #44506a;
   --color-slate-700: #2e3a52;
   --color-slate-800: #1e293b;
@@ -489,7 +498,7 @@ html:root {
   --color-gray-200: #e4e9f2;
   --color-gray-300: #c7cfdd;
   --color-gray-400: #98a2b6;
-  --color-gray-500: #6b7790;
+  --color-gray-500: #636e85;
   --color-gray-600: #44506a;
   --color-gray-700: #2e3a52;
   --color-gray-800: #1e293b;
@@ -500,7 +509,7 @@ html:root {
   --color-zinc-200: #e4e9f2;
   --color-zinc-300: #c7cfdd;
   --color-zinc-400: #98a2b6;
-  --color-zinc-500: #6b7790;
+  --color-zinc-500: #636e85;
   --color-zinc-600: #44506a;
   --color-zinc-700: #2e3a52;
   --color-zinc-800: #1e293b;
@@ -511,7 +520,7 @@ html:root {
   --color-neutral-200: #e4e9f2;
   --color-neutral-300: #c7cfdd;
   --color-neutral-400: #98a2b6;
-  --color-neutral-500: #6b7790;
+  --color-neutral-500: #636e85;
   --color-neutral-600: #44506a;
   --color-neutral-700: #2e3a52;
   --color-neutral-800: #1e293b;
@@ -522,7 +531,7 @@ html:root {
   --color-stone-200: #e4e9f2;
   --color-stone-300: #c7cfdd;
   --color-stone-400: #98a2b6;
-  --color-stone-500: #6b7790;
+  --color-stone-500: #636e85;
   --color-stone-600: #44506a;
   --color-stone-700: #2e3a52;
   --color-stone-800: #1e293b;
@@ -603,7 +612,8 @@ html.dark {
   --color-green-300: color-mix(in srgb, #4ade80 72%, #ffffff);
   --color-green-400: #4ade80;
   --color-green-500: color-mix(in srgb, #4ade80 78%, #0f172a);
-  --color-green-600: color-mix(in srgb, #4ade80 62%, #0f172a);
+  /* green/emerald/lime 600 at 54 %: white text 4.71:1 (62 % was 3.87:1). */
+  --color-green-600: color-mix(in srgb, #4ade80 54%, #0f172a);
   --color-green-700: color-mix(in srgb, #4ade80 46%, #0f172a);
   --color-green-800: color-mix(in srgb, #4ade80 32%, #0f172a);
   --color-green-900: color-mix(in srgb, #4ade80 20%, #161b26);
@@ -614,7 +624,7 @@ html.dark {
   --color-emerald-300: color-mix(in srgb, #4ade80 72%, #ffffff);
   --color-emerald-400: #4ade80;
   --color-emerald-500: color-mix(in srgb, #4ade80 78%, #0f172a);
-  --color-emerald-600: color-mix(in srgb, #4ade80 62%, #0f172a);
+  --color-emerald-600: color-mix(in srgb, #4ade80 54%, #0f172a);
   --color-emerald-700: color-mix(in srgb, #4ade80 46%, #0f172a);
   --color-emerald-800: color-mix(in srgb, #4ade80 32%, #0f172a);
   --color-emerald-900: color-mix(in srgb, #4ade80 20%, #161b26);
@@ -625,7 +635,7 @@ html.dark {
   --color-lime-300: color-mix(in srgb, #4ade80 72%, #ffffff);
   --color-lime-400: #4ade80;
   --color-lime-500: color-mix(in srgb, #4ade80 78%, #0f172a);
-  --color-lime-600: color-mix(in srgb, #4ade80 62%, #0f172a);
+  --color-lime-600: color-mix(in srgb, #4ade80 54%, #0f172a);
   --color-lime-700: color-mix(in srgb, #4ade80 46%, #0f172a);
   --color-lime-800: color-mix(in srgb, #4ade80 32%, #0f172a);
   --color-lime-900: color-mix(in srgb, #4ade80 20%, #161b26);
@@ -721,8 +731,8 @@ html.dark {
   --color-slate-50: #e9eef7;
   --color-slate-100: #e9eef7;
   --color-slate-200: #b3bfd3;
-  --color-slate-300: #8593ab;
-  --color-slate-400: #8593ab;
+  --color-slate-300: #8c99b0;
+  --color-slate-400: #8c99b0;
   --color-slate-500: #5d6a83;
   --color-slate-600: #3c4761;
   --color-slate-700: #273047;
@@ -732,8 +742,8 @@ html.dark {
   --color-gray-50: #e9eef7;
   --color-gray-100: #e9eef7;
   --color-gray-200: #b3bfd3;
-  --color-gray-300: #8593ab;
-  --color-gray-400: #8593ab;
+  --color-gray-300: #8c99b0;
+  --color-gray-400: #8c99b0;
   --color-gray-500: #5d6a83;
   --color-gray-600: #3c4761;
   --color-gray-700: #273047;
@@ -743,8 +753,8 @@ html.dark {
   --color-zinc-50: #e9eef7;
   --color-zinc-100: #e9eef7;
   --color-zinc-200: #b3bfd3;
-  --color-zinc-300: #8593ab;
-  --color-zinc-400: #8593ab;
+  --color-zinc-300: #8c99b0;
+  --color-zinc-400: #8c99b0;
   --color-zinc-500: #5d6a83;
   --color-zinc-600: #3c4761;
   --color-zinc-700: #273047;
@@ -754,8 +764,8 @@ html.dark {
   --color-neutral-50: #e9eef7;
   --color-neutral-100: #e9eef7;
   --color-neutral-200: #b3bfd3;
-  --color-neutral-300: #8593ab;
-  --color-neutral-400: #8593ab;
+  --color-neutral-300: #8c99b0;
+  --color-neutral-400: #8c99b0;
   --color-neutral-500: #5d6a83;
   --color-neutral-600: #3c4761;
   --color-neutral-700: #273047;
@@ -765,8 +775,8 @@ html.dark {
   --color-stone-50: #e9eef7;
   --color-stone-100: #e9eef7;
   --color-stone-200: #b3bfd3;
-  --color-stone-300: #8593ab;
-  --color-stone-400: #8593ab;
+  --color-stone-300: #8c99b0;
+  --color-stone-400: #8c99b0;
   --color-stone-500: #5d6a83;
   --color-stone-600: #3c4761;
   --color-stone-700: #273047;
@@ -803,4 +813,49 @@ html.dark {
   height: 33px;
   margin-top: 27px;
   color: var(--foreground);
+}
+/* Sidebar foot (WAI-1064): mark is 30px → the bar lockup × .75. On the rail
+   the mark stands alone at 24px (DESIGN-LANGUAGE §3: min mark 24px). */
+.ccc-side-brand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 4px 10px;
+}
+.ccc-side-brand__lockup {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+.ccc-side-brand__mark {
+  display: block;
+  height: 30px;
+  width: auto;
+}
+.ccc-wordmark--side {
+  width: 70.5px;
+  height: 12.75px;
+  margin-left: 10.5px;
+  transform: translateY(1.35px);
+  color: var(--foreground);
+}
+.ccc-side-brand__ver {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  color: var(--ccc-ink-3);
+}
+.ccc-side-brand--rail {
+  flex-direction: column;
+  gap: 4px;
+  margin: 0 0 10px;
+}
+.ccc-side-brand--rail .ccc-side-brand__mark {
+  height: 24px;
+}
+.ccc-side-brand--rail .ccc-side-brand__ver {
+  font-size: 0.625rem;
+  letter-spacing: 0;
 }

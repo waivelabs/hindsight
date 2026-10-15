@@ -466,6 +466,8 @@ export function mount(host, graph, opts = {}) {
     tx: 0,
     ty: 0,
     k: 1,
+    kFit: 1,
+    userView: false,
     hover: -1,
     sel: -1,
     hl: 0,
@@ -537,7 +539,9 @@ export function mount(host, graph, opts = {}) {
     cv.width = eL.width = nL.width = Math.max(1, W * dpr);
     cv.height = eL.height = nL.height = Math.max(1, H * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    if (!S.fitted) {
+    // Refit on every resize until the person pans or zooms: the host can settle
+    // to its final width after the first measure (narrow layouts, fullscreen).
+    if (!S.fitted || !S.userView) {
       fit();
       S.fitted = true;
     }
@@ -556,8 +560,17 @@ export function mount(host, graph, opts = {}) {
       mny = Math.min(mny, g.oy[i]);
       mxy = Math.max(mxy, g.oy[i]);
     }
-    const k = Math.min((W - 100) / Math.max(1, mxx - mnx), (H - 70) / Math.max(1, mxy - mny));
-    S.k = Math.min(2.2, Math.max(0.1, k));
+    // Margins: 50 / 35 px on wide hosts, 6 % of the side on narrow ones, so the
+    // ring fits the width of a phone-size canvas. No lower clamp that could cut it.
+    const mx = Math.min(50, W * 0.06),
+      my = Math.min(35, H * 0.06);
+    const k = Math.min(
+      (W - 2 * mx) / Math.max(1, mxx - mnx),
+      (H - 2 * my) / Math.max(1, mxy - mny)
+    );
+    S.k = Math.min(2.2, Math.max(0.02, k));
+    S.kFit = S.k;
+    S.userView = false;
     S.tx = W / 2 - ((mnx + mxx) / 2) * S.k;
     S.ty = H / 2 - ((mny + mxy) / 2) * S.k;
     dirty = 2;
@@ -926,13 +939,29 @@ export function mount(host, graph, opts = {}) {
           occ[kx - 1 + "," + ky]
         )
           continue;
+        // Right of the node when it fits, else left; when neither side fits (a
+        // narrow canvas), cut the text to the larger side. No label leaves the
+        // canvas. Widths below are screen px.
+        const sx = g.x[i] * S.k + S.tx,
+          sr = g.rad[i] * S.k,
+          roomR = W - 20 - sx - sr,
+          roomL = sx - sr - 20;
+        let n = Math.min(txt0.length, 34),
+          txt = txt0.slice(0, n) + (txt0.length > n ? "…" : ""),
+          tw = ctx.measureText(txt).width * S.k;
+        const right = tw <= roomR || (tw > roomL && roomR >= roomL),
+          room = right ? roomR : roomL;
+        while (tw > room && n > 6) {
+          n--;
+          txt = txt0.slice(0, n) + "…";
+          tw = ctx.measureText(txt).width * S.k;
+        }
+        if (tw > room) continue;
         occ[kk] = 1;
         seen[txt0] = 1;
         shown++;
-        const txt = txt0.slice(0, 34) + (txt0.length > 34 ? "…" : ""),
-          tw = ctx.measureText(txt).width;
-        const flip = (g.x[i] + g.rad[i] + 15 / S.k + tw) * S.k + S.tx > W - 8,
-          lx0 = flip ? g.x[i] - g.rad[i] - 9 / S.k - tw : g.x[i] + g.rad[i] + 9 / S.k;
+        tw /= S.k;
+        const lx0 = right ? g.x[i] + g.rad[i] + 9 / S.k : g.x[i] - g.rad[i] - 9 / S.k - tw;
         ctx.fillStyle = rgba(hex(P.bg), 0.72);
         ctx.fillRect(lx0 - 3 / S.k, g.y[i] - 7 / S.k, tw + 6 / S.k, 14 / S.k);
         ctx.fillStyle = rgba(hex(P.ink), 0.88);
@@ -975,7 +1004,7 @@ export function mount(host, graph, opts = {}) {
     if (drag) {
       const dx = e.clientX - drag.x,
         dy = e.clientY - drag.y;
-      if (Math.abs(dx) + Math.abs(dy) > 2) moved = true;
+      if (Math.abs(dx) + Math.abs(dy) > 2) moved = S.userView = true;
       S.tx = drag.tx + dx;
       S.ty = drag.ty + dy;
       return;
@@ -1005,10 +1034,12 @@ export function mount(host, graph, opts = {}) {
     const r = cv.getBoundingClientRect(),
       px = e.clientX - r.left,
       py = e.clientY - r.top,
-      nk = Math.min(8, Math.max(0.3, S.k * (e.deltaY < 0 ? 1.1 : 1 / 1.1)));
+      // zoom-out floor: .3, or a little under the fitted scale on a narrow host
+      nk = Math.min(8, Math.max(Math.min(0.3, S.kFit * 0.8), S.k * (e.deltaY < 0 ? 1.1 : 1 / 1.1)));
     S.tx = px - ((px - S.tx) * nk) / S.k;
     S.ty = py - ((py - S.ty) * nk) / S.k;
     S.k = nk;
+    S.userView = true;
   };
   const onDbl = () => fit();
   cv.addEventListener("pointerdown", onDown);

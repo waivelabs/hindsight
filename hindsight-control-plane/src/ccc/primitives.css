@@ -35,16 +35,17 @@ div.text-2xl.font-semibold.tracking-tight {
 .inline-flex.rounded-\[10px\].text-\[13px\]:active {
   transform: translateY(0.5px);
 }
-/* default + gradient variants: the one blue action per view */
+/* default + gradient variants: the one blue action per view. White text needs
+   the darker fill (5.12:1); the #3179f5 swatch gives 4.05:1 (WAI-1064). */
 .inline-flex.rounded-\[10px\].bg-primary.text-primary-foreground,
 .inline-flex.rounded-\[10px\].bg-primary-gradient {
-  background: var(--ccc-blue-solid);
+  background: var(--ccc-blue-fill);
   color: #ffffff;
   box-shadow: none;
 }
 .inline-flex.rounded-\[10px\].bg-primary.text-primary-foreground:hover,
 .inline-flex.rounded-\[10px\].bg-primary-gradient:hover {
-  background: color-mix(in srgb, var(--ccc-blue-solid) 88%, #000);
+  background: color-mix(in srgb, var(--ccc-blue-fill) 88%, #000);
   opacity: 1;
 }
 /* outline: surface-2 + hairline */
@@ -160,10 +161,12 @@ aside.bg-card.border-r.h-full nav a.rounded-lg {
     background-color var(--ccc-d-micro) var(--ccc-ease),
     color var(--ccc-d-micro) var(--ccc-ease);
 }
+/* Active item: blue text and a blue marker. Orange is kept for one CTA and one
+   headline word per view, so the marker is not the accent (WAI-1064). */
 aside.bg-card.border-r.h-full nav a.bg-primary-gradient {
   background: var(--sidebar-accent);
-  color: var(--ccc-blue);
-  box-shadow: inset 2px 0 0 var(--ccc-accent);
+  color: var(--ccc-blue-text);
+  box-shadow: inset 2px 0 0 var(--ccc-blue);
 }
 aside.bg-card.border-r.h-full nav a.text-muted-foreground:hover {
   background: var(--sidebar-accent);
@@ -181,6 +184,15 @@ button[role="checkbox"].rounded-sm[data-state="indeterminate"] {
   background: var(--ccc-blue-solid);
   border-color: var(--ccc-blue-solid);
   color: #ffffff;
+}
+
+/* ---- Icons: no decorative amber (WAI-1064) -------------------------------
+   Knowledge-tree folders and the pending / stale stat glyphs. The glyph and its
+   word carry the meaning; amber stays for warn status badges only. */
+svg.lucide-folder.text-amber-500,
+svg.lucide-folder-open.text-amber-500,
+svg.lucide-circle-alert.text-amber-500 {
+  color: var(--ccc-ink-3);
 }
 
 /* ---- Overlays: dialog, popover, menu, select ---------------------------- */
@@ -262,7 +274,7 @@ button[role="checkbox"].rounded-sm[data-state="indeterminate"] {
     border-left: 3px solid var(--hs-success) !important;
   }
   [data-sonner-toaster] [data-sonner-toast] [data-button] {
-    background: var(--ccc-blue-solid) !important;
+    background: var(--ccc-blue-fill) !important;
     color: #ffffff !important;
     border-radius: 6px !important;
   }

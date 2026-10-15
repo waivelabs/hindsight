@@ -13,33 +13,54 @@
   position: absolute;
   inset: 0;
 }
-.ccc-cv__hint,
-.ccc-cv__hud {
+/* Top bar (hint, tools) and foot bar (HUD, legend) are flex rows that wrap
+   inside the canvas, so nothing overlaps or leaves a narrow host (WAI-1064).
+   The bars let the pointer through; only the controls take it. */
+.ccc-cv__top,
+.ccc-cv__foot {
   position: absolute;
   left: 14px;
+  right: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  z-index: 2;
+  pointer-events: none;
+}
+.ccc-cv__top {
+  top: 12px;
+  align-items: flex-start;
+}
+.ccc-cv__foot {
+  right: 14px;
+  bottom: 12px;
+  flex-wrap: wrap-reverse;
+  align-items: flex-end;
+}
+/* Text on the canvas is ink-3: ink-4 was 3.16:1 (Dusk) and 2.44:1 (Dawn). */
+.ccc-cv__hint,
+.ccc-cv__hud {
+  min-width: 0;
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 0.66rem;
   line-height: 1.4;
   letter-spacing: 0.06em;
-  color: var(--ccc-ink-4);
-  pointer-events: none;
-  z-index: 2;
-}
-.ccc-cv__hint {
-  top: 12px;
-}
-.ccc-cv__hud {
-  bottom: 12px;
   color: var(--ccc-ink-3);
 }
+.ccc-cv__hint {
+  flex: 1 1 auto;
+}
 .ccc-cv__tools {
-  position: absolute;
-  right: 12px;
-  top: 12px;
   display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   gap: 6px;
   align-items: center;
-  z-index: 2;
+  max-width: 100%;
+  margin-left: auto;
+}
+.ccc-cv__tools > * {
+  pointer-events: auto;
 }
 .ccc-btn,
 .ccc-seg button {
@@ -88,14 +109,12 @@
   color: var(--foreground);
 }
 .ccc-cv__legend {
-  position: absolute;
-  right: 14px;
-  bottom: 12px;
   display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   align-items: center;
-  gap: 16px;
-  z-index: 2;
-  pointer-events: none;
+  gap: 6px 16px;
+  margin-left: auto;
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 0.66rem;
   letter-spacing: 0.06em;
@@ -104,12 +123,13 @@
 .ccc-cv__lbl {
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--ccc-ink-4);
+  color: var(--ccc-ink-3);
 }
 .ccc-cv__ramp {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  white-space: nowrap;
 }
 .ccc-cv__ramp i {
   display: inline-block;
@@ -119,13 +139,15 @@
 }
 .ccc-cv__lk {
   display: inline-flex;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: 4px 12px;
 }
 .ccc-cv__lk i {
   font-style: normal;
   display: inline-flex;
   align-items: center;
   gap: 5px;
+  white-space: nowrap;
 }
 .ccc-cv__lk i::before {
   content: "";
@@ -136,7 +158,7 @@
 }
 .ccc-cv__tip {
   position: absolute;
-  max-width: 300px;
+  max-width: min(300px, calc(100% - 16px));
   padding: 8px 10px;
   border-radius: var(--ccc-r-card, 12px);
   background: var(--ccc-elev);

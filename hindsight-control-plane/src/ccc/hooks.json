@@ -215,6 +215,21 @@
         "client.getBankStats(bankId)",
         "client.getKnowledgeTree(bankId)"
       ]
+    },
+    {
+      "hook": "Knowledge tree folder icons",
+      "file": "src/components/knowledge-base-view.tsx",
+      "must_contain": [
+        "<FolderOpen className=\"w-4 h-4 flex-shrink-0 text-amber-500\" />",
+        "<Folder className=\"w-4 h-4 flex-shrink-0 text-amber-500\" />"
+      ]
+    },
+    {
+      "hook": "Stats pending and stale glyphs",
+      "file": "src/components/bank-stats-view.tsx",
+      "must_contain": [
+        "<AlertCircle className=\"w-3 h-3 text-amber-500\" />"
+      ]
     }
   ],
   "anchors": [
@@ -311,6 +326,16 @@
     {
       "file": "src/components/data-view.tsx",
       "marker": "ccc(constellation)",
+      "count": 1
+    },
+    {
+      "file": "src/components/sidebar.tsx",
+      "marker": "ccc(brand)",
+      "count": 1
+    },
+    {
+      "file": "src/components/sidebar.tsx",
+      "marker": "from \"@/ccc/SidebarBrand\"",
       "count": 1
     }
   ],
