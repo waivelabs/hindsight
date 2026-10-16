@@ -114,6 +114,7 @@
   --ccc-blue-solid: #3179f5; /* swatch: non-text fills (checkbox), 3:1 */
   --ccc-blue-fill: #1063f3; /* fills that carry white text: 5.12:1 */
   --ccc-blue-text: #0b52c9; /* blue text: ≥ 6.07:1 on every Dawn surface */
+  --ccc-blue-on-tint: #0942a3; /* blue text on its own 10–20 % tint, nested tints included: ≥ 5.8:1 */
   --ccc-input: #ffffff;
   --ccc-r-card: 12px;
   --ccc-r-ctl: 8px;
@@ -223,6 +224,7 @@
   --ccc-blue-solid: #3179f5;
   --ccc-blue-fill: #1063f3; /* same fill as Dawn: white 5.12:1 */
   --ccc-blue-text: #7aa7f8;
+  --ccc-blue-on-tint: #b6d0fd; /* blue text on its own tint over the popover or a nested tint: ≥ 6.4:1 */
   --ccc-input: #121725;
   --ccc-sun: #ff8a3d;
   --ccc-amber: #ffb454;

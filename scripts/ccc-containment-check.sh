@@ -37,7 +37,7 @@ CP=hindsight-control-plane
 
 # Anchored upstream files: "<cap> <path>". Cap = maximum added + deleted lines against
 # the base (the size of the anchored edit when it was registered, WAI-995 or later for
-# sidebar.tsx at WAI-1064, plus a small rebase margin).
+# sidebar.tsx at WAI-1064 and staleness-badge.tsx at WAI-1066, plus a small rebase margin).
 ANCHORS='6 hindsight-control-plane/src/app/[locale]/banks/[bankId]/page.tsx
 18 hindsight-control-plane/src/app/[locale]/layout.tsx
 22 hindsight-control-plane/src/app/[locale]/login/page.tsx
@@ -49,6 +49,7 @@ ANCHORS='6 hindsight-control-plane/src/app/[locale]/banks/[bankId]/page.tsx
 44 hindsight-control-plane/src/components/documents-view.tsx
 40 hindsight-control-plane/src/components/home-view.tsx
 18 hindsight-control-plane/src/components/sidebar.tsx
+24 hindsight-control-plane/src/components/staleness-badge.tsx
 40 hindsight-control-plane/src/components/think-view.tsx
 4 hindsight-control-plane/src/components/ui/spinner.tsx'
 

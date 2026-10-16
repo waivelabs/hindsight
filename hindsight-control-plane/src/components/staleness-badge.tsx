@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
+import { StalenessGlyph } from "@/ccc/StalenessGlyph";
 
 type TriggerLike = {
   refresh_after_consolidation?: boolean;
@@ -114,22 +115,9 @@ export function StalenessBadge({
   }
 
   if (variant === "dot") {
-    return (
-      <span
-        className={cn(
-          "w-1.5 h-1.5 rounded-full flex-shrink-0",
-          retrying
-            ? "bg-amber-500"
-            : paused
-              ? "bg-red-500"
-              : isStale
-                ? "bg-amber-500"
-                : "bg-emerald-500",
-          className
-        )}
-        title={title}
-      />
-    );
+    // ccc(staleness): glyph + colour, not a colour-only dot (WAI-1066).
+    const tone = retrying ? "retrying" : paused ? "paused" : isStale ? "stale" : "inSync";
+    return <StalenessGlyph tone={tone} title={title} className={className} />;
   }
 
   return (

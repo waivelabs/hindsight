@@ -230,6 +230,21 @@
       "must_contain": [
         "<AlertCircle className=\"w-3 h-3 text-amber-500\" />"
       ]
+    },
+    {
+      "hook": "Blue text on own tint (WAI-1066)",
+      "file": "src/components/search-debug-view.tsx",
+      "must_contain": [
+        "rounded-full bg-primary/20 flex items-center justify-center",
+        "rounded bg-primary/20 text-primary"
+      ]
+    },
+    {
+      "hook": "Blue text on own tint (WAI-1066)",
+      "file": "src/components/form-layout.tsx",
+      "must_contain": [
+        "bg-primary/15 px-1.5 text-[10px] font-medium text-primary"
+      ]
     }
   ],
   "anchors": [
@@ -336,6 +351,16 @@
     {
       "file": "src/components/sidebar.tsx",
       "marker": "from \"@/ccc/SidebarBrand\"",
+      "count": 1
+    },
+    {
+      "file": "src/components/staleness-badge.tsx",
+      "marker": "ccc(staleness)",
+      "count": 1
+    },
+    {
+      "file": "src/components/staleness-badge.tsx",
+      "marker": "from \"@/ccc/StalenessGlyph\"",
       "count": 1
     }
   ],

@@ -195,6 +195,19 @@ svg.lucide-circle-alert.text-amber-500 {
   color: var(--ccc-ink-3);
 }
 
+/* ---- Blue text on its own tint (WAI-1066, residual N01) -------------------
+   `text-primary` on a `bg-primary/10|15|20` tint reads 3.5–4.4:1 when the tint
+   sits on another tint (search-debug "Output" pill, the "✓" disc) or on the
+   Dusk popover (form-layout section badge). One darker (Dawn) or lighter
+   (Dusk) blue for text on blue tints; plain-surface text and fills keep
+   --primary. */
+.text-primary.bg-primary\/10,
+.text-primary.bg-primary\/15,
+.text-primary.bg-primary\/20,
+.bg-primary\/20 > .text-primary {
+  color: var(--ccc-blue-on-tint);
+}
+
 /* ---- Overlays: dialog, popover, menu, select ---------------------------- */
 /* Scrim */
 .fixed.inset-0.bg-black\/60 {

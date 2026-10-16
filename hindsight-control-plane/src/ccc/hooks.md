@@ -32,6 +32,8 @@ class string or Radix attribute moved, the rule silently stops matching.
 | Header bar | `div.bg-card.border-b-4.border-primary-gradient` | `components/bank-selector.tsx` header root | literal class |
 | Tree and stat icons (WAI-1064) | `svg.lucide-folder.text-amber-500`, `svg.lucide-folder-open.text-amber-500`, `svg.lucide-circle-alert.text-amber-500` | `components/knowledge-base-view.tsx` folder icons; `components/bank-stats-view.tsx` pending / stale glyphs (lucide renders `lucide-<icon>`) | literal class |
 | Sidebar brand (WAI-1064) | anchored: 1 × `ccc(brand)` marker + `@/ccc/SidebarBrand` import in `components/sidebar.tsx`; the footer version line is replaced by the lockup; styles are own classes in `src/ccc/theme.css` (`.ccc-side-brand`) | `components/sidebar.tsx` | anchored edit |
+| Staleness glyph (WAI-1066) | anchored: 1 × `ccc(staleness)` marker + `@/ccc/StalenessGlyph` import in `components/staleness-badge.tsx`; the colour-only `dot` variant renders `src/ccc/StalenessGlyph.tsx` (glyph per state: RefreshCw / CircleAlert / Clock / Check, `role="img"` + `aria-label`) | `components/staleness-badge.tsx` | anchored edit |
+| Blue text on own tint (WAI-1066) | `.text-primary.bg-primary\/10|15|20`, `.bg-primary\/20 > .text-primary` → `--ccc-blue-on-tint` | `components/search-debug-view.tsx` "Output" pill and "✓" disc; `components/form-layout.tsx` section badge | literal class |
 | Home A2 (WAI-1005) | anchored block: 5 × `ccc(home)` markers + `@/ccc/HomeStats` import in `components/home-view.tsx`; strip/legend styles are own classes in `src/ccc/home.css` | `components/home-view.tsx` | anchored edit |
 | Constellation (WAI-1055) | anchored: `export function Constellation(` → `function ConstellationLegacy(` + 3 × `ccc(constellation)` markers + `@/ccc/HorizonConstellation` import in `components/constellation.tsx`; 1 × `ccc(constellation)` (`cccLimit` prop) in `components/data-view.tsx`; renderer and chrome are own files `src/ccc/horizon-engine.js`, `HorizonConstellation.tsx`, `constellation.css`; uses upstream i18n keys `constellation.*` only | `components/constellation.tsx`, `components/data-view.tsx` | anchored edit |
 
@@ -50,7 +52,8 @@ class string or Radix attribute moved, the rule silently stops matching.
 ## Not hooked (no stable hook, left as upstream)
 
 - `facet-chip.tsx` chips: resolve through `--chip-*` tokens only.
-- `staleness-badge.tsx`, `freshness-line.tsx`: resolve through the palette
-  slots (`text-amber-*`, `bg-emerald-*` → warn/good) only.
+- `freshness-line.tsx` and the `badge` / `inline` variants of `staleness-badge.tsx`:
+  resolve through the palette slots (`text-amber-*`, `bg-emerald-*` → warn/good) only.
+  The `dot` variant is anchored (WAI-1066, above).
 - Dialog title / description: Inter, upstream sizes.
 - Pagination, command palette: upstream.
