@@ -107,6 +107,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+entra-postgres = ["azure-identity==1.25.1"]
 local-ml = [
     # Local ML models for embeddings/reranking
     # 5.0 is the floor: LocalSTEmbeddings calls SentenceTransformer.encode_query()
