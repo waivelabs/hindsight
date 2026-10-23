@@ -11,3 +11,14 @@ dev-dependencies = []
 # no cp314 wheels. This forks onnxruntime per platform. Drop it once markitdown
 # allows magika 1.x.
 constraint-dependencies = ["onnxruntime>=1.24.1; sys_platform != 'win32'"]
+
+# Exact published static metadata from the SHA256-verified locked sdist.
+[[tool.uv.dependency-metadata]]
+name = "llama-cpp-python"
+version = "0.3.20"
+requires-python = ">=3.8"
+provides-extra = ["server", "test", "dev", "all"]
+requires-dist = ["typing-extensions>=4.5.0", "numpy>=1.20.0", "diskcache>=5.6.1", "jinja2>=2.11.3", "uvicorn>=0.22.0; extra == \"server\"", "fastapi>=0.100.0; extra == \"server\"", "pydantic-settings>=2.0.1; extra == \"server\"", "sse-starlette>=1.6.1; extra == \"server\"", "starlette-context<0.4,>=0.3.6; extra == \"server\"", "PyYAML>=5.1; extra == \"server\"", "pytest>=7.4.0; extra == \"test\"", "httpx>=0.24.1; extra == \"test\"", "scipy>=1.10; extra == \"test\"", "fastapi>=0.100.0; extra == \"test\"", "sse-starlette>=1.6.1; extra == \"test\"", "starlette-context<0.4,>=0.3.6; extra == \"test\"", "pydantic-settings>=2.0.1; extra == \"test\"", "huggingface-hub>=0.23.0; extra == \"test\"", "ruff>=0.15.7; extra == \"dev\"", "twine>=4.0.2; extra == \"dev\"", "mkdocs>=1.4.3; extra == \"dev\"", "mkdocstrings[python]>=0.22.0; extra == \"dev\"", "mkdocs-material>=9.1.18; extra == \"dev\"", "pytest>=7.4.0; extra == \"dev\"", "httpx>=0.24.1; extra == \"dev\"", "llama_cpp_python[dev,server,test]; extra == \"all\""]
+
+[tool.uv.sources]
+llama-cpp-python = { path = "vendor/llama_cpp_python-0.3.20", editable = false }
