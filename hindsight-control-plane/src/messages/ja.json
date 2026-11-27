@@ -941,19 +941,20 @@
     "loadingEntityGraph": "エンティティグラフを読み込み中...",
     "noCooccurrences": "エンティティの共起がまだありません",
     "noCooccurrencesDescription": "2つのエンティティが同じメモリに現れたとき、共起が発生します。",
-    "heatLegendLabel": "最新度・最終共起日時",
+    "heatLegendLabel": "ソース日付 · 最後の共起",
     "sizeLegendLabel": "共起回数",
     "loadingEntities": "エンティティを読み込み中...",
     "refreshEntities": "エンティティを更新",
     "colName": "名前",
     "colMentions": "言及数",
-    "colFirstSeen": "初回確認",
-    "colLastSeen": "最終確認",
+    "colFirstSeen": "初回のソース日付",
+    "colLastSeen": "最新のソース日付",
+    "sourceDatesHelp": "ソース日付は関連する記憶に基づき、将来の出来事を示す場合があります。",
     "noEntitiesFound": "エンティティが見つかりません",
     "noEntitiesDescription": "エンティティはメモリが追加されるときにファクトから抽出されます。",
     "entityDetails": "エンティティの詳細",
     "mentionsLabel": "言及数",
-    "firstSeenLabel": "初回確認",
+    "firstSeenLabel": "初回のソース日付",
     "entityIdLabel": "エンティティID",
     "errorLoadingEntities": "エンティティの読み込みエラー",
     "errorLoadingEntityDetail": "エンティティ詳細の読み込みエラー",
@@ -1263,6 +1264,9 @@
     "finalResultsDescription": "すべての処理ステップ後の上位結果",
     "rawResponse": "生のレスポンス",
     "readyToRecall": "Recall準備完了",
+    "projectLabel": "プロジェクト識別子",
+    "projectError": "cortana-v3 など、登録済みのプロジェクト識別子を入力してください。",
+    "retryError": "Recall は利用できません。しばらくしてから再試行してください。",
     "readyToRecallDescription": "上にクエリを入力してメモリを検索してください。フィルターを使用して、ファクトタイプ、予算などで絞り込めます。",
     "errorSelectBank": "まずメモリバンクを選択してください",
     "errorSelectFactType": "少なくとも1つのファクトタイプを選択してください",
@@ -1792,6 +1796,7 @@
   "constellation": {
     "instructions": "スクロールでズーム · ドラッグで移動 · ホバーで探索 · クリックで選択",
     "hudStats": "{memories} 件のメモリ · {visible} 件表示 · {labels} 件のラベル · {links} 件のリンク · ズーム {zoom}x",
+    "entityHudStats": "グラフ内 {memories} エンティティ · 表示中 {visible} · ラベル {labels} · リンク {links} · ズーム {zoom}x",
     "exitFullscreenTitle": "全画面表示を終了 (Esc)",
     "enterFullscreenTitle": "全画面表示に切り替える",
     "exitFullscreenLabel": "終了",
@@ -2066,7 +2071,14 @@
         "previewStrategies": "統合戦略のプレビューに失敗しました"
       },
       "recall": {
-        "failed": "Recallの実行に失敗しました"
+        "failed": "Recallの実行に失敗しました",
+        "projectDenied": "検索が拒否されました。プロジェクト識別子がこのバンクに登録されているか確認してください。",
+        "denied": "検索が拒否されました。バンクへのアクセス権と選択したフィルターを確認してください。",
+        "invalid": "Recall のクエリとフィルターを確認してから再試行してください。",
+        "emptyProject": "このプロジェクトで検索できるメモリはありません。プロジェクト識別子を確認してください。",
+        "largeProject": "このプロジェクトはダッシュボードの Recall の上限を超えています。Cortana Recall を使用してください。",
+        "rateLimited": "Recall は混み合っています。少し待ってから再試行してください。",
+        "unavailable": "Recall は利用できません。しばらくしてから再試行してください。"
       },
       "reflect": {
         "failed": "Reflectの実行に失敗しました"

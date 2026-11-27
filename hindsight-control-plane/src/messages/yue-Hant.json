@@ -941,19 +941,20 @@
     "loadingEntityGraph": "載入中實體圖...",
     "noCooccurrences": "尚未有實體共現",
     "noCooccurrencesDescription": "兩個實體出現在同一條記憶內，就會形成一次共現。",
-    "heatLegendLabel": "時效性 · 最近共現時間",
+    "heatLegendLabel": "來源日期 · 最近共同出現",
     "sizeLegendLabel": "共現次數",
     "loadingEntities": "載入中實體...",
     "refreshEntities": "重新整理實體",
     "colName": "名稱",
     "colMentions": "提及次數",
-    "colFirstSeen": "首次出現",
-    "colLastSeen": "最近出現",
+    "colFirstSeen": "初始來源日期",
+    "colLastSeen": "最新來源日期",
+    "sourceDatesHelp": "來源日期來自相關記憶，可以指向未來嘅事件。",
     "noEntitiesFound": "找不到實體",
     "noEntitiesDescription": "新增記憶時，系統會由事實內擷取實體。",
     "entityDetails": "實體詳情",
     "mentionsLabel": "提及次數",
-    "firstSeenLabel": "首次出現",
+    "firstSeenLabel": "初始來源日期",
     "entityIdLabel": "實體 ID",
     "errorLoadingEntities": "載入實體時發生錯誤",
     "errorLoadingEntityDetail": "載入實體詳情時發生錯誤",
@@ -1263,6 +1264,9 @@
     "finalResultsDescription": "所有處理步驟後的最優結果",
     "rawResponse": "原始回應",
     "readyToRecall": "準備召回",
+    "projectLabel": "專案識別碼",
+    "projectError": "請輸入已登記嘅專案識別碼，例如 cortana-v3。",
+    "retryError": "Recall 暫時用唔到。請等一陣再試。",
     "readyToRecallDescription": "在上方輸入查詢以搜尋記憶。可以用篩選器按事實類型、預算等收窄範圍。",
     "errorSelectBank": "請先選擇一個記憶庫",
     "errorSelectFactType": "請至少選擇一種事實類型",
@@ -1792,6 +1796,7 @@
   "constellation": {
     "instructions": "滾動縮放 · 拖曳平移 · 懸停探索 · 選取項目",
     "hudStats": "{memories} 條記憶 · {visible} 條可見 · {labels} 個標籤 · {links} 條連結 · 縮放 {zoom}x",
+    "entityHudStats": "圖譜有 {memories} 個實體 · {visible} 個可見 · {labels} 個標籤 · {links} 條連線 · 縮放 {zoom}x",
     "exitFullscreenTitle": "離開全螢幕 (Esc)",
     "enterFullscreenTitle": "進入全螢幕",
     "exitFullscreenLabel": "退出",
@@ -2066,7 +2071,14 @@
         "previewStrategies": "未能預覽整合策略"
       },
       "recall": {
-        "failed": "未能召回"
+        "failed": "未能召回",
+        "projectDenied": "搜尋被拒。請確認專案識別碼已喺呢個記憶庫登記。",
+        "denied": "搜尋被拒。請檢查記憶庫存取權限同已揀嘅篩選條件。",
+        "invalid": "請檢查 Recall 查詢同篩選條件，再試一次。",
+        "emptyProject": "呢個專案冇可以搜尋嘅記憶。請檢查專案識別碼。",
+        "largeProject": "呢個專案超出儀表板嘅 Recall 上限。請用 Cortana Recall 搜尋。",
+        "rateLimited": "Recall 而家好繁忙。請等一陣再試。",
+        "unavailable": "Recall 暫時用唔到。請等一陣再試。"
       },
       "reflect": {
         "failed": "未能反思"

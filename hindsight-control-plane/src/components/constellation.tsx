@@ -43,6 +43,7 @@ const MOTION_STORAGE_KEY = "constellation-motion";
 // ============================================================================
 
 export interface ConstellationProps {
+  nodeKind?: "memory" | "entity";
   data: GraphData;
   height?: number;
   onNodeClick?: (node: GraphNode) => void;
@@ -253,6 +254,7 @@ function toolbarBtnStyle(isDark: boolean): CSSProperties {
 // Constellation below picks it or the horizon ring (src/ccc/HorizonConstellation).
 function ConstellationLegacy({
   data,
+  nodeKind = "memory",
   height = 700,
   onNodeClick,
   nodeColorFn,
@@ -933,7 +935,7 @@ function ConstellationLegacy({
     ctx.fillStyle = isDark ? "#71717a" : "#71717a";
     ctx.textAlign = "left";
     ctx.fillText(
-      t("hudStats", {
+      t(nodeKind === "entity" ? "entityHudStats" : "hudStats", {
         memories: preparedNodes.length,
         visible: visibleCount,
         labels: labelsShown,
@@ -1030,7 +1032,7 @@ function ConstellationLegacy({
     ctx.restore();
 
     animRef.current = requestAnimationFrame(animate);
-  }, [isDark, preparedNodes, linksWithIndices, linksByNode, clusters, t]);
+  }, [isDark, preparedNodes, linksWithIndices, linksByNode, clusters, nodeKind, t]);
 
   // ----- Label drawing helper -----
   function drawLabel(

@@ -1,10 +1,58 @@
 import { NextRequest, NextResponse } from "next/server";
 import { localizeApiErrorPayload } from "@/lib/i18n/api-errors";
-import { lowLevelClient, sdk } from "@/lib/hindsight-client";
+import { dataplaneBankUrl, getDataplaneHeaders, lowLevelClient, sdk } from "@/lib/hindsight-client";
+
+function recallError(request: NextRequest, status: number, error: string, key: string) {
+  return NextResponse.json(
+    localizeApiErrorPayload(request, { error, errorKey: `api.errors.recall.${key}` }),
+    { status }
+  );
+}
+
+function upstreamRecallError(request: NextRequest, bankId: string, status: number, code?: string) {
+  if (status === 403) {
+    const scoped = bankId === "ccc-work";
+    return recallError(
+      request,
+      status,
+      scoped
+        ? "Recall was denied. Check that the project slug is registered for this bank."
+        : "Recall was denied. Check your access to the bank and the selected filters.",
+      scoped ? "projectDenied" : "denied"
+    );
+  }
+  if (status === 400 || status === 422) {
+    return recallError(
+      request, status, "Check your Recall query and filters, then try again.", "invalid"
+    );
+  }
+  if (status === 404 && code === "empty_project") {
+    return recallError(
+      request, status, "No eligible memories are available for this project. Check the project slug.", "emptyProject"
+    );
+  }
+  if (status === 409 && code === "project_too_large") {
+    return recallError(
+      request, status, "This project exceeds the dashboard Recall limit. Use Cortana Recall for this project.", "largeProject"
+    );
+  }
+  if (status === 429) {
+    return recallError(request, status, "Recall is busy. Wait briefly and try again.", "rateLimited");
+  }
+  return recallError(
+    request,
+    status >= 400 ? status : 502,
+    "Recall is unavailable. Try again shortly.",
+    "unavailable"
+  );
+}
 
 export async function POST(request: NextRequest) {
+  const body = await request.json().catch(() => null);
+  if (!body || typeof body !== "object" || Array.isArray(body)) {
+    return upstreamRecallError(request, "default", 400);
+  }
   try {
-    const body = await request.json();
     const bankId = body.bank_id || body.agent_id || "default";
     const {
       query,
@@ -22,6 +70,22 @@ export async function POST(request: NextRequest) {
       min_scores,
       temporal_window,
     } = body;
+
+    if ((bankId === "ccc-core" || bankId === "ccc-work") && body.project !== undefined) {
+      const response = await fetch(dataplaneBankUrl(bankId, "/scoped-recall"), {
+        method: "POST",
+        headers: getDataplaneHeaders({ "Content-Type": "application/json" }),
+        body: JSON.stringify({ project: body.project, query, max_tokens }),
+        signal: AbortSignal.timeout(95_000),
+      });
+      if (!response.ok) {
+        const error = await response.json().catch(() => null);
+        return upstreamRecallError(request, bankId, response.status, error?.code);
+      }
+      const data = await response.json();
+      if (!Array.isArray(data?.results)) return upstreamRecallError(request, bankId, 502);
+      return NextResponse.json({ results: data.results });
+    }
 
     const response = await sdk.recallMemories({
       client: lowLevelClient,
@@ -44,8 +108,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!response.data) {
-      console.error("[Recall API] No data in response", { response, error: response.error });
-      throw new Error(`API returned no data: ${JSON.stringify(response.error || "Unknown error")}`);
+      return upstreamRecallError(request, bankId, response.response?.status ?? 502);
     }
 
     // Return a clean JSON object by spreading the response
@@ -58,14 +121,7 @@ export async function POST(request: NextRequest) {
     };
 
     return NextResponse.json(jsonResponse, { status: 200 });
-  } catch (error) {
-    console.error("Error recalling:", error);
-    return NextResponse.json(
-      localizeApiErrorPayload(request, {
-        error: "Failed to recall",
-        errorKey: "api.errors.recall.failed",
-      }),
-      { status: 500 }
-    );
+  } catch {
+    return recallError(request, 502, "Recall is unavailable. Try again shortly.", "unavailable");
   }
 }

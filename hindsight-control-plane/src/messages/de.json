@@ -941,19 +941,20 @@
     "loadingEntityGraph": "Entitätsgraph wird geladen...",
     "noCooccurrences": "Noch keine gemeinsamen Entitäten",
     "noCooccurrencesDescription": "Zwei Entitäten treten gemeinsam auf, wenn sie in derselben Erinnerung erscheinen.",
-    "heatLegendLabel": "Aktualität · letztes gemeinsames Auftreten",
+    "heatLegendLabel": "Quelldatum · letztes gemeinsames Auftreten",
     "sizeLegendLabel": "gemeinsame Auftreten",
     "loadingEntities": "Entitäten werden geladen...",
     "refreshEntities": "Entitäten aktualisieren",
     "colName": "Name",
     "colMentions": "Erwähnungen",
-    "colFirstSeen": "Erstmals gesehen",
-    "colLastSeen": "Zuletzt gesehen",
+    "colFirstSeen": "Ursprüngliches Quelldatum",
+    "colLastSeen": "Neuestes Quelldatum",
+    "sourceDatesHelp": "Quelldaten stammen aus verknüpften Erinnerungen und können zukünftige Ereignisse beschreiben.",
     "noEntitiesFound": "Keine Entitäten gefunden",
     "noEntitiesDescription": "Entitäten werden aus Fakten extrahiert, wenn Erinnerungen hinzugefügt werden.",
     "entityDetails": "Entitätsdetails",
     "mentionsLabel": "Erwähnungen",
-    "firstSeenLabel": "Erstmals gesehen",
+    "firstSeenLabel": "Ursprüngliches Quelldatum",
     "entityIdLabel": "Entitäts-ID",
     "errorLoadingEntities": "Fehler beim Laden der Entitäten",
     "errorLoadingEntityDetail": "Fehler beim Laden der Entitätsdetails",
@@ -1263,6 +1264,9 @@
     "finalResultsDescription": "Top-Ergebnisse nach allen Verarbeitungsschritten",
     "rawResponse": "Rohantwort",
     "readyToRecall": "Bereit für Recall",
+    "projectLabel": "Projektkennung",
+    "projectError": "Gib eine registrierte Projektkennung ein, zum Beispiel cortana-v3.",
+    "retryError": "Recall ist derzeit nicht verfügbar. Versuche es gleich erneut.",
     "readyToRecallDescription": "Geben Sie oben eine Abfrage ein, um Ihre Erinnerungen zu durchsuchen. Verwenden Sie Filter, um nach Faktentyp, Budget und mehr einzugrenzen.",
     "errorSelectBank": "Bitte wählen Sie zuerst eine Speicherbank aus",
     "errorSelectFactType": "Bitte wählen Sie mindestens einen Faktentyp aus",
@@ -1792,6 +1796,7 @@
   "constellation": {
     "instructions": "Scrollen zum Zoomen · Ziehen zum Verschieben · Hover zum Erkunden · Klicken zum Auswählen",
     "hudStats": "{memories} Erinnerungen · {visible} sichtbar · {labels} Beschriftungen · {links} Verknüpfungen · Zoom {zoom}x",
+    "entityHudStats": "{memories} Entitäten im Graphen · {visible} sichtbar · {labels} Beschriftungen · {links} Verbindungen · Zoom {zoom}x",
     "exitFullscreenTitle": "Vollbild beenden (Esc)",
     "enterFullscreenTitle": "Vollbild öffnen",
     "exitFullscreenLabel": "Beenden",
@@ -2066,7 +2071,14 @@
         "previewStrategies": "Vorschau der Konsolidierungsstrategien fehlgeschlagen"
       },
       "recall": {
-        "failed": "Recall konnte nicht ausgeführt werden"
+        "failed": "Recall konnte nicht ausgeführt werden",
+        "projectDenied": "Recall wurde abgelehnt. Prüfe, ob diese Projektkennung für die Bank registriert ist.",
+        "denied": "Recall wurde abgelehnt. Prüfe deinen Zugriff auf die Bank und die gewählten Filter.",
+        "invalid": "Prüfe deine Recall-Abfrage und die Filter und versuche es erneut.",
+        "emptyProject": "Für dieses Projekt sind keine geeigneten Erinnerungen verfügbar. Prüfe die Projektkennung.",
+        "largeProject": "Dieses Projekt überschreitet das Recall-Limit des Dashboards. Verwende Cortana Recall für dieses Projekt.",
+        "rateLimited": "Recall ist ausgelastet. Warte kurz und versuche es erneut.",
+        "unavailable": "Recall ist derzeit nicht verfügbar. Versuche es gleich erneut."
       },
       "reflect": {
         "failed": "Reflect konnte nicht ausgeführt werden"

@@ -140,6 +140,7 @@ const STATUS_FILTER_VALUES = [
 
 export function BankOperationsView() {
   const t = useTranslations("bankOperations");
+  const tCommon = useTranslations("common");
   const { currentBank } = useBank();
   const [operations, setOperations] = useState<Operation[]>([]);
   const [totalOperations, setTotalOperations] = useState(0);
@@ -150,7 +151,11 @@ export function BankOperationsView() {
   const [cancellingOpId, setCancellingOpId] = useState<string | null>(null);
   const [retryingOpId, setRetryingOpId] = useState<string | null>(null);
   const [deletingOpId, setDeletingOpId] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const queryKey = JSON.stringify([currentBank, statusFilter, taskTypeFilter, limit, offset]);
+  const [result, setResult] = useState<{ key: string; status: "success" | "error" } | null>(null);
+  const requestRef = useRef<{ key: string } | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const status = result?.key === queryKey ? result.status : "loading";
   const [selectedOperation, setSelectedOperation] = useState<OperationDetails | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [loadingDetails, setLoadingDetails] = useState(false);
@@ -363,52 +368,46 @@ export function BankOperationsView() {
     );
   };
 
-  const loadOperations = useCallback(
-    async (
-      newStatusFilter: string | null = statusFilter,
-      newOffset: number = offset,
-      newTaskTypeFilter: string | null = taskTypeFilter
-    ) => {
-      if (!currentBank) return;
+  const loadOperations = useCallback(async (background = false) => {
+    if (!currentBank || requestRef.current?.key === queryKey) return;
 
-      setLoading(true);
-      try {
-        const opsData = await client.listOperations(currentBank, {
-          status: newStatusFilter || undefined,
-          type: newTaskTypeFilter || undefined,
-          limit,
-          offset: newOffset,
-          excludeParents: true,
-        });
-        setOperations(opsData.operations || []);
-        setTotalOperations(opsData.total || 0);
-        // Refresh the clock on every poll so relative times (e.g. the "Updated" column)
-        // stay accurate even when nothing is processing and the 1s ticker is idle.
-        setNowMs(Date.now());
-      } catch (error) {
-        console.error("Error loading operations:", error);
-      } finally {
-        setLoading(false);
+    const request = { key: queryKey };
+    requestRef.current = request;
+    setRefreshing(true);
+    if (!background) setResult(null);
+    try {
+      const opsData = await client.listOperations(currentBank, {
+        status: statusFilter || undefined,
+        type: taskTypeFilter || undefined,
+        limit,
+        offset,
+        excludeParents: true,
+      });
+      if (requestRef.current !== request) return;
+      setOperations(opsData.operations || []);
+      setTotalOperations(opsData.total || 0);
+      setResult({ key: queryKey, status: "success" });
+      setNowMs(Date.now());
+    } catch (error) {
+      if (requestRef.current !== request) return;
+      setResult({ key: queryKey, status: "error" });
+      console.error("Error loading operations:", error);
+    } finally {
+      if (requestRef.current === request) {
+        requestRef.current = null;
+        setRefreshing(false);
       }
-    },
-    [currentBank, statusFilter, offset, taskTypeFilter, limit]
-  );
+    }
+  }, [currentBank, queryKey, statusFilter, taskTypeFilter, limit, offset]);
 
   const handleFilterChange = (newFilter: string | null) => {
     setStatusFilter(newFilter);
     setOffset(0);
-    loadOperations(newFilter, 0, taskTypeFilter);
   };
 
   const handleTaskTypeFilterChange = (newTaskType: string | null) => {
     setTaskTypeFilter(newTaskType);
     setOffset(0);
-    loadOperations(statusFilter, 0, newTaskType);
-  };
-
-  const handlePageChange = (newOffset: number) => {
-    setOffset(newOffset);
-    loadOperations(statusFilter, newOffset, taskTypeFilter);
   };
 
   const handleCancelOperation = async (operationId: string) => {
@@ -494,17 +493,19 @@ export function BankOperationsView() {
 
   // Poll faster while work is in flight so the progress bar / heartbeat feel live, and
   // back off to a calmer cadence when everything is terminal.
-  const hasProcessing = operations.some((op) => op.status === "processing");
+  const hasProcessing = status === "success" && operations.some((op) => op.status === "processing");
   useEffect(() => {
-    if (currentBank) {
-      loadOperations(statusFilter, offset, taskTypeFilter);
-      const interval = setInterval(
-        () => loadOperations(statusFilter, offset, taskTypeFilter),
-        hasProcessing ? 2000 : 5000
-      );
-      return () => clearInterval(interval);
-    }
-  }, [currentBank, statusFilter, offset, taskTypeFilter, hasProcessing, loadOperations]);
+    void loadOperations();
+    return () => {
+      requestRef.current = null;
+    };
+  }, [loadOperations]);
+
+  useEffect(() => {
+    if (!currentBank) return;
+    const interval = setInterval(() => void loadOperations(true), hasProcessing ? 2000 : 5000);
+    return () => clearInterval(interval);
+  }, [currentBank, hasProcessing, loadOperations]);
 
   // Only tick the heartbeat clock while something is actually running — no point
   // re-rendering every second when every operation is in a terminal state.
@@ -556,17 +557,19 @@ export function BankOperationsView() {
               onClick={() => loadOperations()}
               className="p-1 rounded hover:bg-muted transition-colors"
               title={t("refreshOperations")}
-              disabled={loading}
+              disabled={refreshing}
             >
               <RefreshCw
-                className={`w-4 h-4 text-muted-foreground hover:text-foreground ${loading ? "animate-spin" : ""}`}
+                className={`w-4 h-4 text-muted-foreground hover:text-foreground ${refreshing ? "motion-safe:animate-spin" : ""}`}
               />
             </button>
           </div>
-          <p className="text-sm text-muted-foreground">
-            {t("operationCount", { count: totalOperations })}
-            {statusFilter ? ` (${formatStatus(statusFilter)})` : ""}
-          </p>
+          {status === "success" && (
+            <p className="text-sm text-muted-foreground">
+              {t("operationCount", { count: totalOperations })}
+              {statusFilter ? ` (${formatStatus(statusFilter)})` : ""}
+            </p>
+          )}
         </div>
         <div className="flex items-center gap-3">
           <Select
@@ -607,7 +610,15 @@ export function BankOperationsView() {
         </div>
       </div>
       <div>
-        {operations.length > 0 ? (
+        {status === "loading" ? (
+          <p role="status" className="text-muted-foreground text-center py-8 text-sm">
+            {tCommon("loading")}
+          </p>
+        ) : status === "error" ? (
+          <p role="alert" className="text-destructive text-center py-8 text-sm">
+            {tCommon("error")}
+          </p>
+        ) : operations.length > 0 ? (
           <>
             <div className="overflow-x-auto">
               <Table>
@@ -742,7 +753,7 @@ export function BankOperationsView() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => handlePageChange(Math.max(0, offset - limit))}
+                    onClick={() => setOffset(Math.max(0, offset - limit))}
                     disabled={offset === 0}
                   >
                     {t("paginationPrevious")}
@@ -750,7 +761,7 @@ export function BankOperationsView() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => handlePageChange(offset + limit)}
+                    onClick={() => setOffset(offset + limit)}
                     disabled={offset + limit >= totalOperations}
                   >
                     {t("paginationNext")}

@@ -941,19 +941,20 @@
     "loadingEntityGraph": "Cargando grafo de entidades...",
     "noCooccurrences": "Aún no hay co-ocurrencias de entidades",
     "noCooccurrencesDescription": "Dos entidades co-ocurren cuando aparecen en la misma memoria.",
-    "heatLegendLabel": "Actualidad · última co-ocurrencia",
+    "heatLegendLabel": "Fecha de origen · última coocurrencia",
     "sizeLegendLabel": "co-ocurrencias",
     "loadingEntities": "Cargando entidades...",
     "refreshEntities": "Actualizar entidades",
     "colName": "Nombre",
     "colMentions": "Menciones",
-    "colFirstSeen": "Primera vez visto",
-    "colLastSeen": "Última vez visto",
+    "colFirstSeen": "Fecha inicial de origen",
+    "colLastSeen": "Fecha más reciente de origen",
+    "sourceDatesHelp": "Las fechas de origen provienen de los recuerdos vinculados y pueden describir eventos futuros.",
     "noEntitiesFound": "No se encontraron entidades",
     "noEntitiesDescription": "Las entidades se extraen de los hechos cuando se agregan memorias.",
     "entityDetails": "Detalles de la entidad",
     "mentionsLabel": "Menciones",
-    "firstSeenLabel": "Primera vez visto",
+    "firstSeenLabel": "Fecha inicial de origen",
     "entityIdLabel": "ID de entidad",
     "errorLoadingEntities": "Error al cargar las entidades",
     "errorLoadingEntityDetail": "Error al cargar el detalle de la entidad",
@@ -1263,6 +1264,9 @@
     "finalResultsDescription": "Mejores resultados tras todos los pasos de procesamiento",
     "rawResponse": "Respuesta sin procesar",
     "readyToRecall": "Listo para Recall",
+    "projectLabel": "Identificador del proyecto",
+    "projectError": "Introduce un identificador de proyecto registrado, como cortana-v3.",
+    "retryError": "Recall no está disponible. Vuelve a intentarlo en breve.",
     "readyToRecallDescription": "Ingresa una consulta arriba para buscar en tus memorias. Usa los filtros para acotar por tipo de hecho, presupuesto y más.",
     "errorSelectBank": "Primero selecciona un banco de memoria",
     "errorSelectFactType": "Selecciona al menos un tipo de hecho",
@@ -1792,6 +1796,7 @@
   "constellation": {
     "instructions": "Desplaza para hacer zoom · Arrastra para mover · Pasa el cursor para explorar · Haz clic para seleccionar",
     "hudStats": "{memories} memorias · {visible} visibles · {labels} etiquetas · {links} enlaces · zoom {zoom}x",
+    "entityHudStats": "{memories} entidades en el grafo · {visible} visibles · {labels} etiquetas · {links} enlaces · zoom {zoom}x",
     "exitFullscreenTitle": "Salir de pantalla completa (Esc)",
     "enterFullscreenTitle": "Entrar en pantalla completa",
     "exitFullscreenLabel": "Salir",
@@ -2066,7 +2071,14 @@
         "previewStrategies": "No se pudo previsualizar las estrategias de consolidación"
       },
       "recall": {
-        "failed": "No se pudo ejecutar Recall"
+        "failed": "No se pudo ejecutar Recall",
+        "projectDenied": "Se denegó la búsqueda. Comprueba que el identificador del proyecto esté registrado para este banco.",
+        "denied": "Se denegó la búsqueda. Comprueba tu acceso al banco y los filtros seleccionados.",
+        "invalid": "Revisa la consulta de Recall y los filtros y vuelve a intentarlo.",
+        "emptyProject": "No hay memorias disponibles para este proyecto. Comprueba el identificador del proyecto.",
+        "largeProject": "Este proyecto supera el límite de Recall del panel. Usa Cortana Recall para este proyecto.",
+        "rateLimited": "Recall está ocupado. Espera un momento y vuelve a intentarlo.",
+        "unavailable": "Recall no está disponible. Vuelve a intentarlo en breve."
       },
       "reflect": {
         "failed": "No se pudo ejecutar Reflect"

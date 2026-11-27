@@ -53,6 +53,7 @@ function activityFromStats(
 
 export function HorizonConstellation({
   data,
+  nodeKind = "memory",
   height = 700,
   onNodeClick,
   nodeColorFn,
@@ -120,7 +121,7 @@ export function HorizonConstellation({
         if (now - lastHud < 300) return;
         lastHud = now;
         setHud(
-          t("hudStats", {
+          t(nodeKind === "entity" ? "entityHudStats" : "hudStats", {
             memories: g.N.toLocaleString(),
             visible: s.drawn.toLocaleString(),
             labels: s.labels,

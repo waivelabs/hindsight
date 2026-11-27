@@ -941,19 +941,20 @@
     "loadingEntityGraph": "正在加载实体图...",
     "noCooccurrences": "还没有实体共现",
     "noCooccurrencesDescription": "两个实体出现在同一条记忆中时，会形成一次共现。",
-    "heatLegendLabel": "时效性 · 最近共现时间",
+    "heatLegendLabel": "来源日期 · 最近共同出现",
     "sizeLegendLabel": "共现次数",
     "loadingEntities": "正在加载实体...",
     "refreshEntities": "刷新实体",
     "colName": "名称",
     "colMentions": "提及次数",
-    "colFirstSeen": "首次出现",
-    "colLastSeen": "最近出现",
+    "colFirstSeen": "初始来源日期",
+    "colLastSeen": "最新来源日期",
+    "sourceDatesHelp": "来源日期来自关联记忆，可以描述未来的事件。",
     "noEntitiesFound": "未找到实体",
     "noEntitiesDescription": "实体会在新增记忆时从事实中提取。",
     "entityDetails": "实体详情",
     "mentionsLabel": "提及次数",
-    "firstSeenLabel": "首次出现",
+    "firstSeenLabel": "初始来源日期",
     "entityIdLabel": "实体 ID",
     "errorLoadingEntities": "加载实体出错",
     "errorLoadingEntityDetail": "加载实体详情出错",
@@ -1263,6 +1264,9 @@
     "finalResultsDescription": "所有处理步骤后的最优结果",
     "rawResponse": "原始响应",
     "readyToRecall": "准备召回",
+    "projectLabel": "项目标识",
+    "projectError": "请输入已注册的项目标识，例如 cortana-v3。",
+    "retryError": "Recall 暂不可用。请稍后重试。",
     "readyToRecallDescription": "在上方输入查询以搜索你的记忆。可以使用过滤器按事实类型、预算等缩小范围。",
     "errorSelectBank": "请先选择一个记忆库",
     "errorSelectFactType": "请至少选择一种事实类型",
@@ -1792,6 +1796,7 @@
   "constellation": {
     "instructions": "滚动缩放 · 拖拽平移 · 悬停探索 · 点击选择",
     "hudStats": "{memories} 条记忆 · {visible} 条可见 · {labels} 个标签 · {links} 条链接 · 缩放 {zoom}x",
+    "entityHudStats": "图谱中有 {memories} 个实体 · {visible} 个可见 · {labels} 个标签 · {links} 条连线 · 缩放 {zoom}x",
     "exitFullscreenTitle": "退出全屏 (Esc)",
     "enterFullscreenTitle": "进入全屏",
     "exitFullscreenLabel": "退出",
@@ -2066,7 +2071,14 @@
         "previewStrategies": "预览整合策略失败"
       },
       "recall": {
-        "failed": "召回失败"
+        "failed": "召回失败",
+        "projectDenied": "搜索被拒绝。请确认该项目标识已在此记忆库注册。",
+        "denied": "搜索被拒绝。请检查记忆库访问权限和所选筛选条件。",
+        "invalid": "请检查 Recall 查询和筛选条件，然后重试。",
+        "emptyProject": "该项目没有可供搜索的记忆。请检查项目标识。",
+        "largeProject": "该项目超出控制面板的 Recall 上限。请使用 Cortana Recall 搜索。",
+        "rateLimited": "Recall 繁忙。请稍后重试。",
+        "unavailable": "Recall 暂不可用。请稍后重试。"
       },
       "reflect": {
         "failed": "反思失败"

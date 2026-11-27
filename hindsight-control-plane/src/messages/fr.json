@@ -941,19 +941,20 @@
     "loadingEntityGraph": "Chargement du graphe d'entités...",
     "noCooccurrences": "Aucune co-occurrence d'entités pour l'instant",
     "noCooccurrencesDescription": "Deux entités co-occurrent quand elles apparaissent dans le même souvenir.",
-    "heatLegendLabel": "Récence · dernière co-occurrence",
+    "heatLegendLabel": "Date source · dernière cooccurrence",
     "sizeLegendLabel": "co-occurrences",
     "loadingEntities": "Chargement des entités...",
     "refreshEntities": "Actualiser les entités",
     "colName": "Nom",
     "colMentions": "Mentions",
-    "colFirstSeen": "Premier aperçu",
-    "colLastSeen": "Dernier aperçu",
+    "colFirstSeen": "Date source initiale",
+    "colLastSeen": "Dernière date source",
+    "sourceDatesHelp": "Les dates sources proviennent des souvenirs liés et peuvent décrire des événements futurs.",
     "noEntitiesFound": "Aucune entité trouvée",
     "noEntitiesDescription": "Les entités sont extraites des faits lors de l'ajout de souvenirs.",
     "entityDetails": "Détails de l'entité",
     "mentionsLabel": "Mentions",
-    "firstSeenLabel": "Premier aperçu",
+    "firstSeenLabel": "Date source initiale",
     "entityIdLabel": "ID de l'entité",
     "errorLoadingEntities": "Erreur lors du chargement des entités",
     "errorLoadingEntityDetail": "Erreur lors du chargement du détail de l'entité",
@@ -1263,6 +1264,9 @@
     "finalResultsDescription": "Meilleurs résultats après toutes les étapes de traitement",
     "rawResponse": "Réponse brute",
     "readyToRecall": "Prêt à Recall",
+    "projectLabel": "Identifiant du projet",
+    "projectError": "Saisissez un identifiant de projet enregistré, par exemple cortana-v3.",
+    "retryError": "Recall est indisponible. Réessayez dans un instant.",
     "readyToRecallDescription": "Saisissez une requête ci-dessus pour effectuer une recherche dans vos souvenirs. Utilisez les filtres pour affiner par type de fait, budget, etc.",
     "errorSelectBank": "Veuillez d'abord sélectionner une banque de mémoire",
     "errorSelectFactType": "Veuillez sélectionner au moins un type de fait",
@@ -1792,6 +1796,7 @@
   "constellation": {
     "instructions": "Défiler pour zoomer · Glisser pour déplacer · Survoler pour explorer · Cliquer pour sélectionner",
     "hudStats": "{memories} souvenirs · {visible} visibles · {labels} étiquettes · {links} liens · zoom {zoom}x",
+    "entityHudStats": "{memories} entités dans le graphe · {visible} visibles · {labels} étiquettes · {links} liens · zoom {zoom}x",
     "exitFullscreenTitle": "Quitter le plein écran (Esc)",
     "enterFullscreenTitle": "Passer en plein écran",
     "exitFullscreenLabel": "Quitter",
@@ -2066,7 +2071,14 @@
         "previewStrategies": "Impossible de prévisualiser les stratégies de consolidation"
       },
       "recall": {
-        "failed": "Impossible d'exécuter Recall"
+        "failed": "Impossible d'exécuter Recall",
+        "projectDenied": "La recherche a été refusée. Vérifiez que l’identifiant du projet est enregistré pour cette banque.",
+        "denied": "La recherche a été refusée. Vérifiez votre accès à la banque et les filtres sélectionnés.",
+        "invalid": "Vérifiez votre requête Recall et les filtres, puis réessayez.",
+        "emptyProject": "Aucune mémoire admissible pour ce projet. Vérifiez l’identifiant du projet.",
+        "largeProject": "Ce projet dépasse la limite de Recall du tableau de bord. Utilisez Cortana Recall pour ce projet.",
+        "rateLimited": "Recall est occupé. Patientez un instant, puis réessayez.",
+        "unavailable": "Recall est indisponible. Réessayez dans un instant."
       },
       "reflect": {
         "failed": "Impossible d'exécuter Reflect"

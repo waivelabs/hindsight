@@ -555,8 +555,8 @@ function BankSelectorInner() {
   };
 
   return (
-    <div className="bg-card text-card-foreground px-5 py-3 border-b-4 border-primary-gradient">
-      <div className="flex items-center gap-4 text-sm">
+    <div className="bg-card text-card-foreground px-3 py-2 lg:px-5 lg:py-3 border-b-4 border-primary-gradient">
+      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-2 gap-y-2 text-sm lg:flex lg:gap-4">
         {/* Logo, split so only the mark spins on navigation while the wordmark
             stays put. The mark is the standalone favicon.png (so it can rotate
             freely); the wordmark is the right slice of the full lockup (logo.png)
@@ -565,7 +565,7 @@ function BankSelectorInner() {
         {/* The logo is the way back to the banks overview, as it is in most apps. */}
         <button
           type="button"
-          className="flex items-center h-10 select-none cursor-pointer"
+          className="col-start-1 row-start-1 flex h-10 w-fit shrink-0 items-center rounded-sm select-none cursor-pointer focus-visible:outline-2 focus-visible:outline-primary"
           aria-label={tNavBank("allBanks")}
           title={tNavBank("allBanks")}
           onClick={() => router.push("/dashboard")}
@@ -583,285 +583,293 @@ function BankSelectorInner() {
         </button>
 
         {/* Separator */}
-        <div className="h-8 w-px bg-border" />
+        <div className="hidden h-8 w-px shrink-0 bg-border lg:block" />
 
-        {/* Memory Bank Selector */}
-        <Popover
-          open={open}
-          onOpenChange={(isOpen) => {
-            setOpen(isOpen);
-            if (isOpen) {
-              // Reopen on an unfiltered first page rather than whatever was typed last.
-              setSearchDraft("");
-              if (bankSearch) searchBanks("");
-              else loadBanks();
-            }
-          }}
-        >
-          <PopoverTrigger asChild>
+        <div className="col-span-2 row-start-2 flex min-w-0 items-center gap-2 lg:gap-4">
+          {/* Memory Bank Selector */}
+          <Popover
+            open={open}
+            onOpenChange={(isOpen) => {
+              setOpen(isOpen);
+              if (isOpen) {
+                // Reopen on an unfiltered first page rather than whatever was typed last.
+                setSearchDraft("");
+                if (bankSearch) searchBanks("");
+                else loadBanks();
+              }
+            }}
+          >
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                role="combobox"
+                aria-label={[tNavBank("select"), currentBankName || currentBank].filter(Boolean).join(": ")}
+                aria-expanded={open}
+                className="min-w-0 flex-1 justify-between border-2 border-primary px-2 font-bold hover:bg-accent lg:w-[250px] lg:px-4"
+              >
+                <span className="truncate">
+                  {currentBankName || currentBank || tNavBank("select")}
+                </span>
+                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent
+              className="w-[420px] max-w-[calc(100vw-24px)] p-0"
+              align="start"
+              collisionPadding={12}
+            >
+              {/* shouldFilter={false}: matching is done by the server so search reaches
+                  banks that haven't been paged in yet. */}
+              <Command shouldFilter={false}>
+                <CommandInput
+                  placeholder={tNavBank("search")}
+                  value={searchDraft}
+                  onValueChange={setSearchDraft}
+                />
+                <CommandList
+                  ref={setListEl}
+                  // cmdk keeps --cmdk-list-height in sync with the rendered rows, so the
+                  // popover eases down to the filtered set instead of snapping shut.
+                  className="h-[min(300px,var(--cmdk-list-height,300px))] transition-[height] duration-200 ease-out motion-reduce:transition-none"
+                >
+                  <CommandEmpty>
+                    {banksLoading ? (
+                      <div className="flex items-center justify-center gap-2 py-2">
+                        <Spinner size="sm" />
+                        <span>{tCommon("loading")}</span>
+                      </div>
+                    ) : bankSearch ? (
+                      tNavBank("noSearchResults")
+                    ) : (
+                      tNavBank("empty")
+                    )}
+                  </CommandEmpty>
+                  {/* The previous results stay put and dim while a search is in flight —
+                      blanking the list first makes every keystroke flash. */}
+                  <CommandGroup
+                    className={cn(
+                      "transition-opacity duration-150 motion-reduce:transition-none",
+                      banksLoading && bankInfos.length > 0 && "opacity-40"
+                    )}
+                  >
+                    {orderedBanks.map((bank, index) => {
+                      const barPct = (bank.fact_count / maxFactCount) * 100;
+                      const isSelected = currentBank === bank.bank_id;
+                      // Last write, not last ingestion: appends to an existing document
+                      // bump last_write_at only.
+                      const lastWriteAt = bank.last_write_at || bank.last_document_at;
+                      return (
+                        <CommandItem
+                          key={bank.bank_id}
+                          value={bank.bank_id}
+                          onSelect={(value) => {
+                            setCurrentBank(value);
+                            setOpen(false);
+                            const view = searchParams.get("view") || "data";
+                            const subTab = searchParams.get("subTab");
+                            const queryString = subTab
+                              ? `?view=${view}&subTab=${subTab}`
+                              : `?view=${view}`;
+                            router.push(bankRoute(value, queryString));
+                          }}
+                          // Only rows that actually mount animate: React keeps the pages
+                          // already on screen, so appending page 2 flows in without
+                          // replaying page 1. The stagger restarts per page and is capped
+                          // so the tail of a 50-row page doesn't crawl in.
+                          className={cn(
+                            "relative overflow-hidden py-2.5 mb-0.5 group animate-list-row-enter",
+                            // Not bg-accent: cmdk paints the keyboard-active row with
+                            // data-[selected=true]:bg-accent, so reusing it here would
+                            // make two rows look active at once while arrowing down.
+                            isSelected && "ring-1 ring-inset ring-primary/50"
+                          )}
+                          style={{
+                            animationDelay: `${Math.min(index % BANKS_PAGE_SIZE, 10) * 18}ms`,
+                          }}
+                        >
+                          {/* Background bar — proportional to memory count */}
+                          <div
+                            className="absolute inset-y-0 left-0 bg-primary/15 dark:bg-primary/20 rounded-[inherit] transition-all"
+                            style={{ width: `${barPct}%` }}
+                          />
+                          <div className="relative flex items-center w-full gap-2">
+                            <Check
+                              className={cn(
+                                "h-4 w-4 shrink-0",
+                                isSelected ? "opacity-100 text-primary" : "opacity-0"
+                              )}
+                            />
+                            <span
+                              className={cn(
+                                "truncate flex-1",
+                                isSelected ? "font-semibold" : "font-medium"
+                              )}
+                              title={bank.display_alias || bank.name || bank.bank_id}
+                            >
+                              {/* display_alias outranks name: `name` is a deprecated
+                                  free-text label, while a promoted alias is a real id
+                                  the operator chose to present the bank under. */}
+                              {bank.display_alias || bank.name || bank.bank_id}
+                            </span>
+                            {/* The real id stays visible whenever it is not what is
+                                shown — the display is a convenience, never a disguise. */}
+                            {bank.display_alias && (
+                              <span
+                                className="shrink-0 truncate max-w-[35%] font-mono text-[11px] text-muted-foreground/60"
+                                title={bank.bank_id}
+                              >
+                                {bank.bank_id}
+                              </span>
+                            )}
+                            {/* Only set when the search matched an alias rather than this
+                                bank's own id or name, which is exactly when the row would
+                                otherwise look like it does not match what was typed. */}
+                            {bank.matched_aliases.length > 0 && (
+                              <span
+                                className="shrink-0 truncate max-w-[40%] font-mono text-[11px] text-muted-foreground/70"
+                                title={tNavBank("viaAlias", {
+                                  aliases: bank.matched_aliases.join(", "),
+                                })}
+                              >
+                                {tNavBank("viaAlias", { aliases: bank.matched_aliases.join(", ") })}
+                              </span>
+                            )}
+                            <button
+                              type="button"
+                              aria-label={tNavBank("copyName")}
+                              title={tNavBank("copyName")}
+                              className="inline-flex h-6 w-6 items-center justify-center rounded hover:bg-accent-foreground/10 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity shrink-0"
+                              onMouseDown={(e) => {
+                                // Stop cmdk from intercepting before onClick fires.
+                                e.stopPropagation();
+                                e.preventDefault();
+                              }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                navigator.clipboard.writeText(bank.bank_id).then(
+                                  () => toast.success(tNavBank("copied")),
+                                  () => toast.error(tNavBank("copied"))
+                                );
+                              }}
+                            >
+                              <Copy className="h-3.5 w-3.5" />
+                            </button>
+                            <span className="shrink-0 tabular-nums text-[11px] text-muted-foreground/70">
+                              {bank.fact_count > 0 ? (
+                                <>
+                                  {formatCompact(bank.fact_count)}
+                                  <span className="ml-1.5 text-muted-foreground/40">
+                                    {lastWriteAt ? formatTimeAgo(lastWriteAt) : ""}
+                                  </span>
+                                </>
+                              ) : (
+                                <span className="italic text-muted-foreground/40">empty</span>
+                              )}
+                            </span>
+                          </div>
+                        </CommandItem>
+                      );
+                    })}
+                  </CommandGroup>
+                  {hasMoreBanks && (
+                    <div ref={setSentinelEl} className="flex items-center justify-center py-2">
+                      {banksLoadingMore && (
+                        <span className="animate-soft-fade-in">
+                          <Spinner size="sm" />
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </CommandList>
+                {/* Footer: Create new bank */}
+                <div className="border-t border-border p-1">
+                  <button
+                    className="w-full flex items-center gap-2 px-2 py-2 text-sm rounded-md hover:bg-accent transition-colors text-muted-foreground hover:text-foreground"
+                    onClick={() => {
+                      setOpen(false);
+                      setCreateDialogOpen(true);
+                    }}
+                  >
+                    <Plus className="h-4 w-4" />
+                    <span>{tNavBank("create")}</span>
+                  </button>
+                </div>
+              </Command>
+            </PopoverContent>
+          </Popover>
+
+          {/* Separator */}
+          <div className="hidden h-8 w-px shrink-0 bg-border lg:block" />
+
+          {/* Add Document Button */}
+          {currentBank && (
             <Button
               variant="outline"
-              role="combobox"
-              aria-expanded={open}
-              className="w-[250px] justify-between font-bold border-2 border-primary hover:bg-accent"
+              size="sm"
+              className="h-9 shrink-0 gap-1.5 px-2.5 lg:px-3.5"
+              onClick={() => setDocDialogOpen(true)}
+              title={tAddDocument("addDocumentToCurrentBank")}
+              data-add-document
             >
-              <span className="truncate">
-                {currentBankName || currentBank || tNavBank("select")}
-              </span>
-              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              <Plus className="h-4 w-4" />
+              <span>{tAddDocument("addDocumentButton")}</span>
             </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-[420px] p-0" align="start">
-            {/* shouldFilter={false}: matching is done by the server so search reaches
-                banks that haven't been paged in yet. */}
-            <Command shouldFilter={false}>
-              <CommandInput
-                placeholder={tNavBank("search")}
-                value={searchDraft}
-                onValueChange={setSearchDraft}
-              />
-              <CommandList
-                ref={setListEl}
-                // cmdk keeps --cmdk-list-height in sync with the rendered rows, so the
-                // popover eases down to the filtered set instead of snapping shut.
-                className="h-[min(300px,var(--cmdk-list-height,300px))] transition-[height] duration-200 ease-out motion-reduce:transition-none"
-              >
-                <CommandEmpty>
-                  {banksLoading ? (
-                    <div className="flex items-center justify-center gap-2 py-2">
-                      <Spinner size="sm" />
-                      <span>{tCommon("loading")}</span>
-                    </div>
-                  ) : bankSearch ? (
-                    tNavBank("noSearchResults")
-                  ) : (
-                    tNavBank("empty")
-                  )}
-                </CommandEmpty>
-                {/* The previous results stay put and dim while a search is in flight —
-                    blanking the list first makes every keystroke flash. */}
-                <CommandGroup
-                  className={cn(
-                    "transition-opacity duration-150 motion-reduce:transition-none",
-                    banksLoading && bankInfos.length > 0 && "opacity-40"
-                  )}
-                >
-                  {orderedBanks.map((bank, index) => {
-                    const barPct = (bank.fact_count / maxFactCount) * 100;
-                    const isSelected = currentBank === bank.bank_id;
-                    // Last write, not last ingestion: appends to an existing document
-                    // bump last_write_at only.
-                    const lastWriteAt = bank.last_write_at || bank.last_document_at;
-                    return (
-                      <CommandItem
-                        key={bank.bank_id}
-                        value={bank.bank_id}
-                        onSelect={(value) => {
-                          setCurrentBank(value);
-                          setOpen(false);
-                          const view = searchParams.get("view") || "data";
-                          const subTab = searchParams.get("subTab");
-                          const queryString = subTab
-                            ? `?view=${view}&subTab=${subTab}`
-                            : `?view=${view}`;
-                          router.push(bankRoute(value, queryString));
-                        }}
-                        // Only rows that actually mount animate: React keeps the pages
-                        // already on screen, so appending page 2 flows in without
-                        // replaying page 1. The stagger restarts per page and is capped
-                        // so the tail of a 50-row page doesn't crawl in.
-                        className={cn(
-                          "relative overflow-hidden py-2.5 mb-0.5 group animate-list-row-enter",
-                          // Not bg-accent: cmdk paints the keyboard-active row with
-                          // data-[selected=true]:bg-accent, so reusing it here would
-                          // make two rows look active at once while arrowing down.
-                          isSelected && "ring-1 ring-inset ring-primary/50"
-                        )}
-                        style={{
-                          animationDelay: `${Math.min(index % BANKS_PAGE_SIZE, 10) * 18}ms`,
-                        }}
-                      >
-                        {/* Background bar — proportional to memory count */}
-                        <div
-                          className="absolute inset-y-0 left-0 bg-primary/15 dark:bg-primary/20 rounded-[inherit] transition-all"
-                          style={{ width: `${barPct}%` }}
-                        />
-                        <div className="relative flex items-center w-full gap-2">
-                          <Check
-                            className={cn(
-                              "h-4 w-4 shrink-0",
-                              isSelected ? "opacity-100 text-primary" : "opacity-0"
-                            )}
-                          />
-                          <span
-                            className={cn(
-                              "truncate flex-1",
-                              isSelected ? "font-semibold" : "font-medium"
-                            )}
-                            title={bank.display_alias || bank.name || bank.bank_id}
-                          >
-                            {/* display_alias outranks name: `name` is a deprecated
-                                free-text label, while a promoted alias is a real id
-                                the operator chose to present the bank under. */}
-                            {bank.display_alias || bank.name || bank.bank_id}
-                          </span>
-                          {/* The real id stays visible whenever it is not what is
-                              shown — the display is a convenience, never a disguise. */}
-                          {bank.display_alias && (
-                            <span
-                              className="shrink-0 truncate max-w-[35%] font-mono text-[11px] text-muted-foreground/60"
-                              title={bank.bank_id}
-                            >
-                              {bank.bank_id}
-                            </span>
-                          )}
-                          {/* Only set when the search matched an alias rather than this
-                              bank's own id or name, which is exactly when the row would
-                              otherwise look like it does not match what was typed. */}
-                          {bank.matched_aliases.length > 0 && (
-                            <span
-                              className="shrink-0 truncate max-w-[40%] font-mono text-[11px] text-muted-foreground/70"
-                              title={tNavBank("viaAlias", {
-                                aliases: bank.matched_aliases.join(", "),
-                              })}
-                            >
-                              {tNavBank("viaAlias", { aliases: bank.matched_aliases.join(", ") })}
-                            </span>
-                          )}
-                          <button
-                            type="button"
-                            aria-label={tNavBank("copyName")}
-                            title={tNavBank("copyName")}
-                            className="inline-flex h-6 w-6 items-center justify-center rounded hover:bg-accent-foreground/10 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity shrink-0"
-                            onMouseDown={(e) => {
-                              // Stop cmdk from intercepting before onClick fires.
-                              e.stopPropagation();
-                              e.preventDefault();
-                            }}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              navigator.clipboard.writeText(bank.bank_id).then(
-                                () => toast.success(tNavBank("copied")),
-                                () => toast.error(tNavBank("copied"))
-                              );
-                            }}
-                          >
-                            <Copy className="h-3.5 w-3.5" />
-                          </button>
-                          <span className="shrink-0 tabular-nums text-[11px] text-muted-foreground/70">
-                            {bank.fact_count > 0 ? (
-                              <>
-                                {formatCompact(bank.fact_count)}
-                                <span className="ml-1.5 text-muted-foreground/40">
-                                  {lastWriteAt ? formatTimeAgo(lastWriteAt) : ""}
-                                </span>
-                              </>
-                            ) : (
-                              <span className="italic text-muted-foreground/40">empty</span>
-                            )}
-                          </span>
-                        </div>
-                      </CommandItem>
-                    );
-                  })}
-                </CommandGroup>
-                {hasMoreBanks && (
-                  <div ref={setSentinelEl} className="flex items-center justify-center py-2">
-                    {banksLoadingMore && (
-                      <span className="animate-soft-fade-in">
-                        <Spinner size="sm" />
-                      </span>
-                    )}
-                  </div>
-                )}
-              </CommandList>
-              {/* Footer: Create new bank */}
-              <div className="border-t border-border p-1">
-                <button
-                  className="w-full flex items-center gap-2 px-2 py-2 text-sm rounded-md hover:bg-accent transition-colors text-muted-foreground hover:text-foreground"
-                  onClick={() => {
-                    setOpen(false);
-                    setCreateDialogOpen(true);
-                  }}
-                >
-                  <Plus className="h-4 w-4" />
-                  <span>{tNavBank("create")}</span>
-                </button>
-              </div>
-            </Command>
-          </PopoverContent>
-        </Popover>
+          )}
+        </div>
 
-        {/* Separator */}
-        <div className="h-8 w-px bg-border" />
-
-        {/* Add Document Button */}
-        {currentBank && (
-          <Button
-            variant="outline"
-            size="sm"
-            className="h-9 gap-1.5"
-            onClick={() => setDocDialogOpen(true)}
-            title={tAddDocument("addDocumentToCurrentBank")}
-            data-add-document
+        <div className="col-start-2 row-start-1 flex items-center justify-end lg:ml-auto lg:gap-4">
+          {/* GitHub Link */}
+          <a
+            href="https://github.com/vectorize-io/hindsight"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 rounded-lg px-1.5 py-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground lg:px-3"
+            title={tNav("viewOnGitHub")}
           >
-            <Plus className="h-4 w-4" />
-            <span>{tAddDocument("addDocumentButton")}</span>
+            <Github className="h-5 w-5" />
+            <span className="sr-only text-sm font-medium lg:not-sr-only">GitHub</span>
+          </a>
+
+          {/* Separator */}
+          <div className="hidden h-8 w-px shrink-0 bg-border lg:block" />
+
+          {/* Dark Mode Toggle */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleTheme}
+            className="h-9 w-9"
+            title={theme === "light" ? tNav("darkMode") : tNav("lightMode")}
+          >
+            {theme === "light" ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
           </Button>
-        )}
 
-        {/* Spacer */}
-        <div className="flex-1" />
+          <LanguageSwitcher />
 
-        {/* GitHub Link */}
-        <a
-          href="https://github.com/vectorize-io/hindsight"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-accent transition-colors text-muted-foreground hover:text-foreground"
-          title={tNav("viewOnGitHub")}
-        >
-          <Github className="h-5 w-5" />
-          <span className="text-sm font-medium">GitHub</span>
-        </a>
+          {features?.access_key_auth && (
+            <>
+              <div className="hidden h-8 w-px shrink-0 bg-border lg:block" />
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9"
+                title="Logout"
+                onClick={async () => {
+                  try {
+                    await fetch(withBasePath("/api/auth/logout"), { method: "POST" });
+                  } finally {
+                    window.location.href = withBasePath("/login");
+                  }
+                }}
+              >
+                <LogOut className="h-5 w-5" />
+              </Button>
+            </>
+          )}
 
-        {/* Separator */}
-        <div className="h-8 w-px bg-border" />
-
-        {/* Dark Mode Toggle */}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={toggleTheme}
-          className="h-9 w-9"
-          title={theme === "light" ? tNav("darkMode") : tNav("lightMode")}
-        >
-          {theme === "light" ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
-        </Button>
-
-        <LanguageSwitcher />
-
-        {features?.access_key_auth && (
-          <>
-            <div className="h-8 w-px bg-border" />
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-9 w-9"
-              title="Logout"
-              onClick={async () => {
-                try {
-                  await fetch(withBasePath("/api/auth/logout"), { method: "POST" });
-                } finally {
-                  window.location.href = withBasePath("/login");
-                }
-              }}
-            >
-              <LogOut className="h-5 w-5" />
-            </Button>
-          </>
-        )}
-
+        </div>
+      </div>
+      <>
         <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
           <DialogContent className="sm:max-w-[550px]">
             <DialogHeader>
@@ -1563,7 +1571,7 @@ function BankSelectorInner() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
-      </div>
+      </>
     </div>
   );
 }
@@ -1572,38 +1580,41 @@ export function BankSelector() {
   return (
     <Suspense
       fallback={
-        <div className="bg-card text-card-foreground px-5 py-3 border-b-4 border-primary-gradient">
-          <div className="flex items-center gap-4 text-sm">
+        <div className="bg-card text-card-foreground px-3 py-2 lg:px-5 lg:py-3 border-b-4 border-primary-gradient">
+          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-2 gap-y-2 text-sm lg:flex lg:gap-4">
             {/* ccc(brand): Cortana lockup (static fallback while loading). */}
-            <img
-              src={withBasePath("/ccc/cortana-mark.png")}
-              alt="Cortana"
-              className="h-10 w-auto"
-            />
-            <span className="ccc-wordmark ccc-wordmark--bar" aria-hidden="true" />
-            <div className="h-8 w-px bg-border" />
+            <div className="col-start-1 row-start-1 flex shrink-0 items-center">
+              <img
+                src={withBasePath("/ccc/cortana-mark.png")}
+                alt="Cortana"
+                className="h-10 w-auto"
+              />
+              <span className="ccc-wordmark ccc-wordmark--bar" aria-hidden="true" />
+            </div>
+            <div className="hidden h-8 w-px shrink-0 bg-border lg:block" />
             <Button
               variant="outline"
-              className="w-[250px] justify-between font-bold border-2 border-primary"
+              className="col-span-2 row-start-2 justify-between font-bold border-2 border-primary lg:w-[250px]"
               disabled
             >
               Loading...
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
-            <div className="flex-1" />
-            <a
-              href="https://github.com/vectorize-io/hindsight"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-accent transition-colors text-muted-foreground"
-            >
-              <Github className="h-5 w-5" />
-              <span className="text-sm font-medium">GitHub</span>
-            </a>
-            <div className="h-8 w-px bg-border" />
-            <Button variant="ghost" size="icon" className="h-9 w-9" disabled>
-              <Moon className="h-5 w-5" />
-            </Button>
+            <div className="col-start-2 row-start-1 flex items-center justify-end lg:ml-auto lg:gap-4">
+              <a
+                href="https://github.com/vectorize-io/hindsight"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 rounded-lg px-1.5 py-2 text-muted-foreground transition-colors hover:bg-accent lg:px-3"
+              >
+                <Github className="h-5 w-5" />
+                <span className="sr-only text-sm font-medium lg:not-sr-only">GitHub</span>
+              </a>
+              <div className="hidden h-8 w-px shrink-0 bg-border lg:block" />
+              <Button variant="ghost" size="icon" className="h-9 w-9" disabled>
+                <Moon className="h-5 w-5" />
+              </Button>
+            </div>
           </div>
         </div>
       }
