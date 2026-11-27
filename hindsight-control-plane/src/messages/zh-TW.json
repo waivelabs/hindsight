@@ -941,19 +941,20 @@
     "loadingEntityGraph": "載入中實體圖...",
     "noCooccurrences": "還沒有實體共現",
     "noCooccurrencesDescription": "兩個實體出現在同一條記憶中時，會形成一次共現。",
-    "heatLegendLabel": "時效性 · 最近共現時間",
+    "heatLegendLabel": "來源日期 · 最近共同出現",
     "sizeLegendLabel": "共現次數",
     "loadingEntities": "載入中實體...",
     "refreshEntities": "重新整理實體",
     "colName": "名稱",
     "colMentions": "提及次數",
-    "colFirstSeen": "首次出現",
-    "colLastSeen": "最近出現",
+    "colFirstSeen": "初始來源日期",
+    "colLastSeen": "最新來源日期",
+    "sourceDatesHelp": "來源日期來自關聯記憶，可以描述未來的事件。 首次記錄實體時，若無事件日期，Cortana 會使用記錄時間。",
     "noEntitiesFound": "找不到實體",
     "noEntitiesDescription": "實體會在新增記憶時從事實中擷取。",
     "entityDetails": "實體詳情",
     "mentionsLabel": "提及次數",
-    "firstSeenLabel": "首次出現",
+    "firstSeenLabel": "初始來源日期",
     "entityIdLabel": "實體 ID",
     "errorLoadingEntities": "載入實體時發生錯誤",
     "errorLoadingEntityDetail": "載入實體詳情時發生錯誤",
@@ -1263,6 +1264,9 @@
     "finalResultsDescription": "所有處理步驟後的最優結果",
     "rawResponse": "原始回應",
     "readyToRecall": "準備召回",
+    "projectLabel": "專案識別碼",
+    "projectError": "請輸入已註冊的專案識別碼，例如 cortana-v3。",
+    "retryError": "Recall 暫時無法使用。請稍後再試。",
     "readyToRecallDescription": "在上方輸入查詢以搜尋記憶。可以使用篩選器按事實類型、預算等縮小範圍。",
     "errorSelectBank": "請先選擇一個記憶庫",
     "errorSelectFactType": "請至少選擇一種事實型別",
@@ -1792,6 +1796,7 @@
   "constellation": {
     "instructions": "滾動縮放 · 拖曳平移 · 懸停探索 · 按一下選取",
     "hudStats": "{memories} 條記憶 · {visible} 條可見 · {labels} 個標籤 · {links} 條連結 · 縮放 {zoom}x",
+    "entityHudStats": "圖譜中有 {memories} 個實體 · {visible} 個可見 · {labels} 個標籤 · {links} 條連線 · 縮放 {zoom}x",
     "exitFullscreenTitle": "離開全螢幕 (Esc)",
     "enterFullscreenTitle": "進入全螢幕",
     "exitFullscreenLabel": "退出",
@@ -2066,7 +2071,12 @@
         "previewStrategies": "預覽整合策略失敗"
       },
       "recall": {
-        "failed": "召回失敗"
+        "failed": "召回失敗",
+        "projectDenied": "目前範圍的搜尋遭拒。請檢查專案識別碼，或聯絡儀表板管理員。",
+        "denied": "搜尋遭拒。請檢查記憶庫存取權限和所選篩選條件。",
+        "invalid": "請檢查 Recall 查詢和篩選條件，然後再試。",
+        "rateLimited": "Recall 忙碌中。請稍後再試。",
+        "unavailable": "Recall 暫時無法使用。請稍後再試。"
       },
       "reflect": {
         "failed": "反思失敗"

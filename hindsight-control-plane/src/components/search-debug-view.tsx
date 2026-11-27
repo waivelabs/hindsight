@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { client } from "@/lib/api";
 import { resolveTemporalWindow } from "@/lib/temporal-window";
 import { useBank } from "@/lib/bank-context";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -107,8 +108,21 @@ const exactScore = (v: number | null | undefined): string | undefined =>
   v === null || v === undefined ? undefined : String(v);
 
 export function SearchDebugView() {
-  const t = useTranslations("searchDebug");
   const { currentBank } = useBank();
+  const scopeKey = currentBank === "ccc-core" || currentBank === "ccc-work" ? currentBank : "standard";
+  return <SearchDebugPanel key={scopeKey} currentBank={currentBank} />;
+}
+
+function SearchDebugPanel({ currentBank }: { currentBank: ReturnType<typeof useBank>["currentBank"] }) {
+  const t = useTranslations("searchDebug");
+  const scopedBank = currentBank === "ccc-core" || currentBank === "ccc-work";
+  const [project, setProject] = useState("");
+  const searchGeneration = useRef(0);
+  const [recallError, setRecallError] = useState<string | null>(null);
+
+  const projectLabel = t("projectLabel");
+  const projectError = t("projectError");
+  const retryError = t("retryError");
 
   // Query state
   const [query, setQuery] = useState("");
@@ -197,10 +211,12 @@ export function SearchDebugView() {
     (result?.attachments as RetainedAttachment[] | undefined) ?? [];
 
   const runSearch = async () => {
+    if (loading) return;
+    setRecallError(null);
     // Guard here, not just on the button: Enter in the query box calls this
     // directly, and searching anyway would silently drop the window the user
     // set rather than telling them it is unusable.
-    if (temporalWindow.reversed) {
+    if (!scopedBank && temporalWindow.reversed) {
       toast.error(t("temporalWindowReversed"));
       return;
     }
@@ -209,16 +225,28 @@ export function SearchDebugView() {
       return;
     }
 
-    if (!query) {
+    if (!query.trim()) {
+      return;
+    }
+
+    const projectSlug = currentBank === "ccc-core" ? "common" : project.trim();
+    if (scopedBank && !/^[a-z0-9][a-z0-9-]{0,79}$/.test(projectSlug)) {
+      setResults(null);
+      setRecallError(projectError);
       return;
     }
 
     // Must select at least one type
-    if (factTypes.length === 0) {
+    if (!scopedBank && factTypes.length === 0) {
       toast.error(t("errorSelectFactType"));
       return;
     }
 
+    const generation = ++searchGeneration.current;
+    if (scopedBank) {
+      setResults(null);
+      setSelectedMemoryId(null);
+    }
     setLoading(true);
 
     try {
@@ -244,7 +272,11 @@ export function SearchDebugView() {
         ...(parsedTags.length > 0 && { tags: parsedTags, tags_match: tagsMatch }),
       };
 
-      const data: any = await client.recall(requestBody);
+      const data: any = await client.recall(
+        scopedBank ? { bank_id: currentBank, project: projectSlug, query } : requestBody,
+        { inlineErrors: scopedBank }
+      );
+      if (generation !== searchGeneration.current) return;
 
       setResults(data.results || []);
       setEntities(data.entities || null);
@@ -253,9 +285,15 @@ export function SearchDebugView() {
       setTrace(data.trace || null);
       setViewMode("results");
     } catch (error) {
-      // Error toast is shown automatically by the API client interceptor
+      if (!scopedBank || generation !== searchGeneration.current) return;
+      const status = (error as { status?: number } | null)?.status;
+      if (status && error instanceof Error) {
+        setRecallError(error.message);
+      } else {
+        setRecallError(retryError);
+      }
     } finally {
-      setLoading(false);
+      if (generation === searchGeneration.current) setLoading(false);
     }
   };
 
@@ -290,15 +328,43 @@ export function SearchDebugView() {
             </div>
             <Button
               onClick={runSearch}
-              disabled={loading || !query || temporalWindow.reversed}
+              disabled={loading || !query.trim() || (!scopedBank && temporalWindow.reversed)}
               className="h-12 px-8"
             >
               {loading ? t("searching") : t("recall")}
             </Button>
           </div>
 
+          {currentBank === "ccc-work" && (
+            <div className="mt-4 max-w-sm space-y-2">
+              <Label htmlFor="recall-project">{projectLabel}</Label>
+              <Input
+                id="recall-project"
+                value={project}
+                placeholder="cortana-v3"
+                onChange={(event) => {
+                  ++searchGeneration.current;
+                  setProject(event.target.value);
+                  setSelectedMemoryId(null);
+                  setResults(null);
+                  setRecallError(null);
+                  setLoading(false);
+                }}
+                onKeyDown={(event) => event.key === "Enter" && runSearch()}
+                autoComplete="off"
+                spellCheck={false}
+                required
+              />
+            </div>
+          )}
+          {recallError && (
+            <Alert variant="destructive" className="mt-4">
+              <AlertDescription>{recallError}</AlertDescription>
+            </Alert>
+          )}
+
           {/* Everyday filters inline; everything else behind Options. */}
-          <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3">
+          <div className={scopedBank ? "hidden" : "mt-4 flex flex-wrap items-center gap-x-6 gap-y-3"}>
             <div className="flex items-center gap-1.5">
               <FactTypeFilter value={factTypes} onChange={setFactTypes} label={t("typesLabel")} />
               <Hint text={t("helpTypes")} />
@@ -327,7 +393,7 @@ export function SearchDebugView() {
             </div>
           </div>
 
-          {optionsOpen && (
+          {!scopedBank && optionsOpen && (
             <div className="mt-5 grid gap-8 md:grid-cols-2">
               <Section title={t("sectionRetrieval")}>
                 <Row
@@ -571,8 +637,13 @@ export function SearchDebugView() {
                               <p className="text-foreground">{result.text}</p>
                               <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-xs text-muted-foreground">
                                 <span className="px-2 py-0.5 rounded bg-muted capitalize">
-                                  {result.type || "world"}
+                                  {result.type || result.fact_type || "world"}
                                 </span>
+                                {scopedBank && result.lifecycle && (
+                                  <span className="px-2 py-0.5 rounded bg-muted">
+                                    {result.lifecycle}
+                                  </span>
+                                )}
                                 {result.context && (
                                   <span className="truncate max-w-xs">{result.context}</span>
                                 )}
@@ -1268,7 +1339,7 @@ export function SearchDebugView() {
       )}
 
       {/* Empty State */}
-      {!loading && !results && (
+      {!loading && !results && !recallError && (
         <Card className="border-dashed">
           <CardContent className="flex flex-col items-center justify-center py-16">
             <Search className="h-12 w-12 text-muted-foreground mb-4" />

@@ -401,7 +401,10 @@ export class ControlPlaneClient {
     options?: RequestInit,
     // Bulk callers loop over many requests and report the failures themselves; one
     // toast per failed item would bury the screen.
-    { suppressErrorToast = false }: { suppressErrorToast?: boolean } = {}
+    { suppressErrorToast = false, includeServerErrorMessage = false }: {
+      suppressErrorToast?: boolean;
+      includeServerErrorMessage?: boolean;
+    } = {}
   ): Promise<T> {
     try {
       const response = await fetch(withBasePath(path), {
@@ -427,7 +430,7 @@ export class ControlPlaneClient {
 
         try {
           const errorData = await response.json();
-          if (isClientError) {
+          if (isClientError || includeServerErrorMessage) {
             errorMessage = errorData.error || errorMessage;
             errorDetails = errorData.details ?? errorData.detail ?? errorData.upstream?.detail;
           }
@@ -576,6 +579,7 @@ export class ControlPlaneClient {
     types?: string[];
     prefer_observations?: boolean;
     bank_id: string;
+    project?: string;
     budget?: string;
     max_tokens?: number;
     trace?: boolean;
@@ -596,11 +600,12 @@ export class ControlPlaneClient {
     };
     /** Window for the temporal retrieval arm, used instead of extracting dates from the query text. Ranks memories dated inside it higher; does not drop memories dated outside it. */
     temporal_window?: { start: string; end: string };
-  }) {
-    return this.fetchApi("/api/recall", {
-      method: "POST",
-      body: JSON.stringify(params),
-    });
+  }, { inlineErrors = false }: { inlineErrors?: boolean } = {}) {
+    return this.fetchApi(
+      "/api/recall",
+      { method: "POST", body: JSON.stringify(params) },
+      { suppressErrorToast: inlineErrors, includeServerErrorMessage: inlineErrors }
+    );
   }
 
   /**

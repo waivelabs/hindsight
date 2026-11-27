@@ -122,8 +122,34 @@ interface MentalModel {
 
 type ViewMode = "dashboard" | "files";
 
+function useModelName() {
+  const t = useTranslations("mentalModels");
+  const tStaleness = useTranslations("staleness");
+
+  return (model: MentalModel, retrying: boolean, models: MentalModel[]) => {
+    const status = retrying
+      ? tStaleness("retrying")
+      : model.last_refresh_failed_at
+        ? tStaleness("paused")
+        : model.is_stale === true
+          ? tStaleness("stale")
+          : model.is_stale === false
+            ? tStaleness("inSync")
+            : model.trigger?.refresh_cron
+              ? t("badgeScheduled")
+              : model.trigger?.refresh_after_consolidation
+                ? t("badgeAutoRefresh")
+                : t("badgeManual");
+    const matching = models.filter((other) => other.name === model.name);
+    const position = matching.findIndex((other) => other.id === model.id) + 1;
+    const title = matching.length > 1 ? `${model.name} (${position})` : model.name;
+    return `${title}, ${status}`;
+  };
+}
+
 export function MentalModelsView() {
   const t = useTranslations("mentalModels");
+  const modelName = useModelName();
   const { currentBank } = useBank();
   const [mentalModels, setMentalModels] = useState<MentalModel[]>([]);
   const [loading, setLoading] = useState(false);
@@ -380,8 +406,18 @@ export function MentalModelsView() {
                         <CardContent className="p-4">
                           <div className="flex items-start justify-between mb-3">
                             <div className="flex-1 min-w-0">
-                              <h3 className="font-semibold text-foreground mb-1 truncate">
-                                {m.name}
+                              <h3 className="font-semibold text-foreground mb-1">
+                                <button
+                                  type="button"
+                                  className="block max-w-full cursor-pointer truncate rounded-sm text-left focus-visible:outline-2 focus-visible:outline-primary"
+                                  aria-label={modelName(m, refreshAttempts.has(m.id), mentalModels)}
+                                  onClick={(event) => {
+                                    event.stopPropagation();
+                                    setSelectedMentalModel(m);
+                                  }}
+                                >
+                                  {m.name}
+                                </button>
                               </h3>
                               <div className="flex items-center gap-2">
                                 <code className="text-xs font-mono text-muted-foreground truncate">
@@ -464,6 +500,7 @@ export function MentalModelsView() {
               {viewMode === "files" && (
                 <FilesView
                   mentalModels={filteredMentalModels}
+                  allMentalModels={mentalModels}
                   selectedId={filesSelectedId}
                   onSelect={setFilesSelectedId}
                   onOpenDetail={setSelectedMentalModel}
@@ -1031,6 +1068,7 @@ export function UpdateMentalModelDialog({
 
 function FilesView({
   mentalModels,
+  allMentalModels,
   selectedId,
   onSelect,
   onOpenDetail,
@@ -1042,6 +1080,7 @@ function FilesView({
   onDelete,
 }: {
   mentalModels: MentalModel[];
+  allMentalModels: MentalModel[];
   selectedId: string | null;
   onSelect: (id: string) => void;
   onOpenDetail: (m: MentalModel) => void;
@@ -1053,6 +1092,7 @@ function FilesView({
   onDelete: (m: MentalModel) => void;
 }) {
   const t = useTranslations("mentalModels");
+  const modelName = useModelName();
   const effectiveId =
     selectedId && mentalModels.some((m) => m.id === selectedId)
       ? selectedId
@@ -1068,13 +1108,15 @@ function FilesView({
             return (
               <li key={m.id}>
                 <button
+                  type="button"
+                  aria-label={modelName(m, refreshAttempts.has(m.id), allMentalModels)}
+                  aria-pressed={isActive}
                   onClick={() => onSelect(m.id)}
-                  className={`w-full flex items-start gap-2 px-3 py-2 text-left transition-colors border-l-2 ${
+                  className={`w-full flex items-start gap-2 px-3 py-2 text-left transition-colors border-l-2 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary ${
                     isActive
                       ? "bg-primary/10 border-primary text-foreground"
                       : "border-transparent text-muted-foreground hover:bg-muted hover:text-foreground"
                   }`}
-                  title={`${m.name}\n${m.source_query}`}
                 >
                   <FileText className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
                   <div className="min-w-0 flex-1">

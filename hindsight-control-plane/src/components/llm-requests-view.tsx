@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { resolveDateRangePreset } from "@/lib/date-range-preset";
 import { useBank } from "@/lib/bank-context";
@@ -516,39 +516,38 @@ export function TraceDialog({
 
 function LLMRequestChart({ bankId }: { bankId: string }) {
   const t = useTranslations("llmRequestsView");
+  const tCommon = useTranslations("common");
   const operationOptions = getOperationOptions(t);
   const periodOptions = getPeriodOptions(t);
   const [period, setPeriod] = useState("7d");
   const [chartOperation, setChartOperation] = useState<string | null>(null);
   const [buckets, setBuckets] = useState<LLMRequestStatsBucket[]>([]);
   const [trunc, setTrunc] = useState("day");
-  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
   const [metric, setMetric] = useState<"calls" | "tokens">("calls");
   const [tokenMode, setTokenMode] = useState<"total" | "breakdown">("total");
   const [cumulative, setCumulative] = useState(false);
 
-  const loadStats = useCallback(
-    async (p: string = period, o: string | null = chartOperation) => {
-      setLoading(true);
-      try {
-        const data = await client.getLLMRequestStats(bankId, {
-          period: p,
-          operation: o || undefined,
-        });
-        setBuckets(data.buckets || []);
-        setTrunc(data.trunc || "day");
-      } catch (error) {
-        console.error("Error loading LLM request stats:", error);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [bankId, period, chartOperation]
-  );
-
   useEffect(() => {
-    loadStats();
-  }, [bankId]);
+    let current = true;
+    setStatus("loading");
+    client.getLLMRequestStats(bankId, {
+      period,
+      operation: chartOperation || undefined,
+    }).then((data) => {
+      if (!current) return;
+      setBuckets(data.buckets || []);
+      setTrunc(data.trunc || "day");
+      setStatus("success");
+    }).catch((error) => {
+      if (!current) return;
+      setStatus("error");
+      console.error("Error loading LLM request stats:", error);
+    });
+    return () => {
+      current = false;
+    };
+  }, [bankId, period, chartOperation]);
 
   // Build per-bucket points, applying a running sum when cumulative is on.
   const running = { calls: 0, input: 0, output: 0, thoughts: 0, cached: 0, total: 0 };
@@ -727,7 +726,7 @@ function LLMRequestChart({ bankId }: { bankId: string }) {
             onValueChange={(v) => {
               const o = v === "all" ? null : v;
               setChartOperation(o);
-              loadStats(period, o);
+              if (o !== chartOperation) setStatus("loading");
             }}
           >
             <SelectTrigger className="w-[150px] h-8 text-xs">
@@ -749,7 +748,7 @@ function LLMRequestChart({ bankId }: { bankId: string }) {
               className="h-8 text-xs"
               onClick={() => {
                 setPeriod(opt.value);
-                loadStats(opt.value, chartOperation);
+                if (opt.value !== period) setStatus("loading");
               }}
             >
               {opt.label}
@@ -759,10 +758,14 @@ function LLMRequestChart({ bankId }: { bankId: string }) {
       </CardHeader>
       <CardContent>
         <div className="h-[140px]">
-          {loading ? (
-            <div className="flex flex-col items-center justify-center gap-2 h-full text-muted-foreground text-sm">
+          {status === "loading" ? (
+            <div role="status" className="flex flex-col items-center justify-center gap-2 h-full text-muted-foreground text-sm">
               <Spinner size="md" />
               <span>{t("chartLoading")}</span>
+            </div>
+          ) : status === "error" ? (
+            <div role="alert" className="flex items-center justify-center h-full text-destructive text-sm">
+              {tCommon("error")}
             </div>
           ) : chartData.length === 0 ? (
             <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
@@ -783,6 +786,7 @@ function LLMRequestChart({ bankId }: { bankId: string }) {
 
 export function LLMRequestsView() {
   const t = useTranslations("llmRequestsView");
+  const tCommon = useTranslations("common");
   const statusOptions = getStatusOptions(t);
   const operationOptions = getOperationOptions(t);
   const { currentBank } = useBank();
@@ -795,73 +799,66 @@ export function LLMRequestsView() {
   const [grouped, setGrouped] = useState(true);
   const [limit] = useState(20);
   const [offset, setOffset] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const queryKey = JSON.stringify([currentBank, statusFilter, operationFilter, dateRange, offset, grouped, limit]);
+  const [result, setResult] = useState<{ key: string; status: "success" | "error" } | null>(null);
+  const requestRef = useRef<{ key: string } | null>(null);
+  const status = result?.key === queryKey ? result.status : "loading";
   const [selected, setSelected] = useState<LLMRequestEntry | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const loadRequests = useCallback(
-    async (
-      newStatusFilter: string | null = statusFilter,
-      newOperationFilter: string | null = operationFilter,
-      newDateRange: string = dateRange,
-      newOffset: number = offset,
-      newGrouped: boolean = grouped
-    ) => {
-      if (!currentBank) return;
+  const loadRequests = useCallback(async () => {
+    if (!currentBank) return;
 
-      setLoading(true);
-      try {
-        const dates = resolveDateRangePreset(newDateRange);
-        const data = await client.listLLMRequests(currentBank, {
-          status: newStatusFilter || undefined,
-          operation: newOperationFilter || undefined,
-          group: newGrouped || undefined,
-          start_date: dates.start_date,
-          end_date: dates.end_date,
-          limit,
-          offset: newOffset,
-        });
-        setRequests(data.items || []);
-        setTotal(data.total || 0);
-      } catch (error) {
-        console.error("Error loading LLM requests:", error);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [currentBank, statusFilter, operationFilter, dateRange, offset, grouped, limit]
-  );
+    const request = { key: queryKey };
+    requestRef.current = request;
+    setResult(null);
+    try {
+      const dates = resolveDateRangePreset(dateRange);
+      const data = await client.listLLMRequests(currentBank, {
+        status: statusFilter || undefined,
+        operation: operationFilter || undefined,
+        group: grouped || undefined,
+        start_date: dates.start_date,
+        end_date: dates.end_date,
+        limit,
+        offset,
+      });
+      if (requestRef.current !== request) return;
+      setRequests(data.items || []);
+      setTotal(data.total || 0);
+      setResult({ key: queryKey, status: "success" });
+    } catch (error) {
+      if (requestRef.current !== request) return;
+      setResult({ key: queryKey, status: "error" });
+      console.error("Error loading LLM requests:", error);
+    }
+  }, [currentBank, queryKey, statusFilter, operationFilter, dateRange, offset, grouped, limit]);
 
   const handleGroupToggle = () => {
     const next = !grouped;
     setGrouped(next);
     setOffset(0);
-    loadRequests(statusFilter, operationFilter, dateRange, 0, next);
   };
 
   const handleStatusFilterChange = (value: string) => {
     const filter = value === "all" ? null : value;
     setStatusFilter(filter);
     setOffset(0);
-    loadRequests(filter, operationFilter, dateRange, 0);
   };
 
   const handleOperationFilterChange = (value: string) => {
     const filter = value === "all" ? null : value;
     setOperationFilter(filter);
     setOffset(0);
-    loadRequests(statusFilter, filter, dateRange, 0);
   };
 
   const handleDateRangeChange = (value: string) => {
     setDateRange(value);
     setOffset(0);
-    loadRequests(statusFilter, operationFilter, value, 0);
   };
 
   const handlePageChange = (newOffset: number) => {
     setOffset(newOffset);
-    loadRequests(statusFilter, operationFilter, dateRange, newOffset);
   };
 
   const handleRowClick = (entry: LLMRequestEntry) => {
@@ -893,10 +890,11 @@ export function LLMRequestsView() {
   );
 
   useEffect(() => {
-    if (currentBank) {
-      loadRequests(statusFilter, operationFilter, dateRange, offset);
-    }
-  }, [currentBank]);
+    void loadRequests();
+    return () => {
+      requestRef.current = null;
+    };
+  }, [loadRequests]);
 
   const totalPages = Math.ceil(total / limit);
   const currentPage = Math.floor(offset / limit) + 1;
@@ -906,7 +904,7 @@ export function LLMRequestsView() {
   return (
     <div className="space-y-6">
       {/* Chart */}
-      <LLMRequestChart bankId={currentBank} />
+      <LLMRequestChart key={currentBank} bankId={currentBank} />
 
       {/* Filters */}
       <div className="flex items-center gap-3 flex-wrap">
@@ -961,16 +959,18 @@ export function LLMRequestsView() {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => loadRequests(statusFilter, operationFilter, dateRange, offset)}
-          disabled={loading}
+          onClick={() => void loadRequests()}
+          disabled={status === "loading"}
         >
-          <RefreshCw className={`w-4 h-4 mr-1 ${loading ? "animate-spin" : ""}`} />
+          <RefreshCw className={`w-4 h-4 mr-1 ${status === "loading" ? "motion-safe:animate-spin" : ""}`} />
           {t("refresh")}
         </Button>
 
-        <span className="text-sm text-muted-foreground ml-auto">
-          {t("entryCount", { count: total })}
-        </span>
+        {status === "success" && (
+          <span className="text-sm text-muted-foreground ml-auto">
+            {t("entryCount", { count: total })}
+          </span>
+        )}
       </div>
 
       {/* Table */}
@@ -986,10 +986,16 @@ export function LLMRequestsView() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {requests.length === 0 ? (
+          {status !== "success" || requests.length === 0 ? (
             <TableRow>
               <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
-                {loading ? t("tableLoading") : t("tableNoRequests")}
+                {status === "loading" ? (
+                  <span role="status">{t("tableLoading")}</span>
+                ) : status === "error" ? (
+                  <span role="alert" className="text-destructive">{tCommon("error")}</span>
+                ) : (
+                  t("tableNoRequests")
+                )}
               </TableCell>
             </TableRow>
           ) : !grouped ? (
@@ -1034,7 +1040,7 @@ export function LLMRequestsView() {
       </Table>
 
       {/* Pagination */}
-      {totalPages > 1 && (
+      {status === "success" && totalPages > 1 && (
         <div className="flex items-center justify-between">
           <span className="text-sm text-muted-foreground">
             {t("paginationPage", { current: currentPage, total: totalPages })}

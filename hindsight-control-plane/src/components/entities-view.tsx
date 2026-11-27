@@ -283,6 +283,7 @@ export function EntitiesView() {
           ) : constellationData.nodes.length > 0 ? (
             <Constellation
               data={constellationData}
+              nodeKind="entity"
               height={700}
               onNodeClick={handleConstellationNodeClick}
               nodeSizeFn={nodeSizeFn}
@@ -324,8 +325,9 @@ export function EntitiesView() {
             </div>
           ) : entities.length > 0 ? (
             <>
-              <div className="mb-4 text-sm text-muted-foreground">
-                {t("entityCount", { count: total })}
+              <div className="mb-4 space-y-1 text-sm text-muted-foreground">
+                <div>{t("entityCount", { count: total })}</div>
+                <p>{t("sourceDatesHelp")}</p>
               </div>
               <div className="overflow-x-auto">
                 <Table>

@@ -941,19 +941,20 @@
     "loadingEntityGraph": "Loading entity graph...",
     "noCooccurrences": "No entity co-occurrences yet",
     "noCooccurrencesDescription": "Two entities co-occur when they appear in the same memory.",
-    "heatLegendLabel": "recency · last co-occurrence",
+    "heatLegendLabel": "Source date · last co-occurrence",
     "sizeLegendLabel": "co-occurrences",
     "loadingEntities": "Loading entities...",
     "refreshEntities": "Refresh entities",
     "colName": "Name",
     "colMentions": "Mentions",
-    "colFirstSeen": "First Seen",
-    "colLastSeen": "Last Seen",
+    "colFirstSeen": "Initial source date",
+    "colLastSeen": "Latest source date",
+    "sourceDatesHelp": "Source dates come from linked memories and can describe future events. They can differ from when Cortana recorded the memory. For an entity first recorded without a dated event, Cortana uses the recording time.",
     "noEntitiesFound": "No entities found",
     "noEntitiesDescription": "Entities are extracted from facts when memories are added.",
     "entityDetails": "Entity details",
     "mentionsLabel": "Mentions",
-    "firstSeenLabel": "First Seen",
+    "firstSeenLabel": "Initial source date",
     "entityIdLabel": "Entity ID",
     "errorLoadingEntities": "Error loading entities",
     "errorLoadingEntityDetail": "Error loading entity detail",
@@ -1263,6 +1264,9 @@
     "finalResultsDescription": "Top results after all processing steps",
     "rawResponse": "Raw Response",
     "readyToRecall": "Ready to Recall",
+    "projectLabel": "Project slug",
+    "projectError": "Enter a registered project slug, such as cortana-v3.",
+    "retryError": "Recall is unavailable. Try again shortly.",
     "readyToRecallDescription": "Enter a query above to search through your memories. Use filters to narrow down by fact type, budget, and more.",
     "errorSelectBank": "Please select a memory bank first",
     "errorSelectFactType": "Please select at least one fact type",
@@ -1792,6 +1796,7 @@
   "constellation": {
     "instructions": "Scroll to zoom · Drag to pan · Hover to explore · Click to select",
     "hudStats": "{memories} memories · {visible} visible · {labels} labels · {links} links · zoom {zoom}x",
+    "entityHudStats": "{memories} entities in graph · {visible} visible · {labels} labels · {links} links · zoom {zoom}x",
     "exitFullscreenTitle": "Exit fullscreen (Esc)",
     "enterFullscreenTitle": "Enter fullscreen",
     "exitFullscreenLabel": "Exit",
@@ -2066,7 +2071,12 @@
         "previewStrategies": "Failed to preview consolidation strategies"
       },
       "recall": {
-        "failed": "Failed to recall"
+        "failed": "Failed to recall",
+        "projectDenied": "Recall was denied for this scope. Check the project slug or ask the dashboard operator for help.",
+        "denied": "Recall was denied. Check your access to the bank and the selected filters.",
+        "invalid": "Check your Recall query and filters, then try again.",
+        "rateLimited": "Recall is busy. Wait briefly and try again.",
+        "unavailable": "Recall is unavailable. Try again shortly."
       },
       "reflect": {
         "failed": "Failed to reflect"

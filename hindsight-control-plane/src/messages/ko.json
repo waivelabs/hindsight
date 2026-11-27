@@ -941,19 +941,20 @@
     "loadingEntityGraph": "엔티티 그래프 불러오는 중...",
     "noCooccurrences": "아직 엔티티 공동 발생 없음",
     "noCooccurrencesDescription": "두 엔티티가 동일한 메모리에 나타날 때 공동 발생합니다.",
-    "heatLegendLabel": "최신성 · 최근 공동 발생 시점",
+    "heatLegendLabel": "출처 날짜 · 마지막 동시 등장",
     "sizeLegendLabel": "공동 발생 횟수",
     "loadingEntities": "엔티티 불러오는 중...",
     "refreshEntities": "엔티티 새로고침",
     "colName": "이름",
     "colMentions": "언급 횟수",
-    "colFirstSeen": "처음 발견",
-    "colLastSeen": "마지막 발견",
+    "colFirstSeen": "최초 출처 날짜",
+    "colLastSeen": "최신 출처 날짜",
+    "sourceDatesHelp": "출처 날짜는 연결된 기억에서 가져오며 미래의 사건을 나타낼 수 있습니다. 엔터티를 처음 기록할 때 이벤트 날짜가 없으면 Cortana는 기록 시각을 사용합니다.",
     "noEntitiesFound": "엔티티를 찾을 수 없습니다",
     "noEntitiesDescription": "메모리가 추가될 때 사실에서 엔티티가 추출됩니다.",
     "entityDetails": "엔티티 세부 정보",
     "mentionsLabel": "언급",
-    "firstSeenLabel": "처음 발견",
+    "firstSeenLabel": "최초 출처 날짜",
     "entityIdLabel": "엔티티 ID",
     "errorLoadingEntities": "엔티티 불러오기 오류",
     "errorLoadingEntityDetail": "엔티티 세부 정보 불러오기 오류",
@@ -1263,6 +1264,9 @@
     "finalResultsDescription": "모든 처리 단계 후 상위 결과",
     "rawResponse": "원본 응답",
     "readyToRecall": "Recall 준비됨",
+    "projectLabel": "프로젝트 식별자",
+    "projectError": "cortana-v3와 같이 등록된 프로젝트 식별자를 입력하세요.",
+    "retryError": "Recall을 사용할 수 없습니다. 잠시 후 다시 시도하세요.",
     "readyToRecallDescription": "위에 쿼리를 입력하여 메모리를 검색하세요. 필터를 사용하여 사실 유형, 예산 등으로 범위를 좁히세요.",
     "errorSelectBank": "먼저 메모리 뱅크를 선택해 주세요",
     "errorSelectFactType": "최소 하나의 사실 유형을 선택해 주세요",
@@ -1792,6 +1796,7 @@
   "constellation": {
     "instructions": "스크롤하여 확대/축소 · 드래그하여 이동 · 호버하여 탐색 · 클릭하여 선택",
     "hudStats": "{memories}개 메모리 · {visible}개 표시 · {labels}개 레이블 · {links}개 링크 · 줌 {zoom}x",
+    "entityHudStats": "그래프의 엔터티 {memories}개 · 표시 중 {visible}개 · 라벨 {labels}개 · 연결 {links}개 · 확대 {zoom}x",
     "exitFullscreenTitle": "전체 화면 종료 (Esc)",
     "enterFullscreenTitle": "전체 화면으로 전환",
     "exitFullscreenLabel": "종료",
@@ -2066,7 +2071,12 @@
         "previewStrategies": "통합 전략 미리보기에 실패했습니다"
       },
       "recall": {
-        "failed": "Recall을 실행하지 못했습니다"
+        "failed": "Recall을 실행하지 못했습니다",
+        "projectDenied": "이 범위에서 검색이 거부되었습니다. 프로젝트 식별자를 확인하거나 대시보드 관리자에게 문의하세요.",
+        "denied": "검색이 거부되었습니다. 뱅크 접근 권한과 선택한 필터를 확인하세요.",
+        "invalid": "Recall 검색어와 필터를 확인한 후 다시 시도하세요.",
+        "rateLimited": "Recall이 사용 중입니다. 잠시 기다렸다가 다시 시도하세요.",
+        "unavailable": "Recall을 사용할 수 없습니다. 잠시 후 다시 시도하세요."
       },
       "reflect": {
         "failed": "Reflect를 실행하지 못했습니다"
