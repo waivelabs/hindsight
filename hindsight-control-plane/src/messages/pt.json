@@ -949,7 +949,7 @@
     "colMentions": "Menções",
     "colFirstSeen": "Data inicial da fonte",
     "colLastSeen": "Data mais recente da fonte",
-    "sourceDatesHelp": "As datas das fontes vêm de memórias vinculadas e podem descrever eventos futuros.",
+    "sourceDatesHelp": "As datas das fontes vêm de memórias vinculadas e podem descrever eventos futuros. Se uma entidade for registrada pela primeira vez sem data do evento, a Cortana usa o horário do registro.",
     "noEntitiesFound": "Nenhuma entidade encontrada",
     "noEntitiesDescription": "As entidades são extraídas dos fatos quando as memórias são adicionadas.",
     "entityDetails": "Detalhes da entidade",

@@ -949,7 +949,7 @@
     "colMentions": "言及数",
     "colFirstSeen": "初回のソース日付",
     "colLastSeen": "最新のソース日付",
-    "sourceDatesHelp": "ソース日付は関連する記憶に基づき、将来の出来事を示す場合があります。",
+    "sourceDatesHelp": "ソース日付は関連する記憶に基づき、将来の出来事を示す場合があります。 エンティティの初回登録時にイベントの日付がない場合、Cortana は登録日時を使用します。",
     "noEntitiesFound": "エンティティが見つかりません",
     "noEntitiesDescription": "エンティティはメモリが追加されるときにファクトから抽出されます。",
     "entityDetails": "エンティティの詳細",

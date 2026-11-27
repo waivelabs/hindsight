@@ -949,7 +949,7 @@
     "colMentions": "Mentions",
     "colFirstSeen": "Initial source date",
     "colLastSeen": "Latest source date",
-    "sourceDatesHelp": "Source dates come from linked memories and can describe future events. They can differ from when Cortana recorded the memory.",
+    "sourceDatesHelp": "Source dates come from linked memories and can describe future events. They can differ from when Cortana recorded the memory. For an entity first recorded without a dated event, Cortana uses the recording time.",
     "noEntitiesFound": "No entities found",
     "noEntitiesDescription": "Entities are extracted from facts when memories are added.",
     "entityDetails": "Entity details",

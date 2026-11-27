@@ -109,7 +109,8 @@ const exactScore = (v: number | null | undefined): string | undefined =>
 
 export function SearchDebugView() {
   const { currentBank } = useBank();
-  return <SearchDebugPanel key={currentBank} currentBank={currentBank} />;
+  const scopeKey = currentBank === "ccc-core" || currentBank === "ccc-work" ? currentBank : "standard";
+  return <SearchDebugPanel key={scopeKey} currentBank={currentBank} />;
 }
 
 function SearchDebugPanel({ currentBank }: { currentBank: ReturnType<typeof useBank>["currentBank"] }) {
@@ -119,13 +120,9 @@ function SearchDebugPanel({ currentBank }: { currentBank: ReturnType<typeof useB
   const searchGeneration = useRef(0);
   const [recallError, setRecallError] = useState<string | null>(null);
 
-  const projectLabel = t.has("projectLabel") ? t("projectLabel") : "Project slug";
-  const projectError = t.has("projectError")
-    ? t("projectError")
-    : "Enter a registered project slug, such as cortana-v3.";
-  const retryError = t.has("retryError")
-    ? t("retryError")
-    : "Recall is unavailable. Try again shortly.";
+  const projectLabel = t("projectLabel");
+  const projectError = t("projectError");
+  const retryError = t("retryError");
 
   // Query state
   const [query, setQuery] = useState("");
@@ -246,8 +243,10 @@ function SearchDebugPanel({ currentBank }: { currentBank: ReturnType<typeof useB
     }
 
     const generation = ++searchGeneration.current;
-    setResults(null);
-    setSelectedMemoryId(null);
+    if (scopedBank) {
+      setResults(null);
+      setSelectedMemoryId(null);
+    }
     setLoading(true);
 
     try {
@@ -275,7 +274,7 @@ function SearchDebugPanel({ currentBank }: { currentBank: ReturnType<typeof useB
 
       const data: any = await client.recall(
         scopedBank ? { bank_id: currentBank, project: projectSlug, query } : requestBody,
-        { inlineErrors: true }
+        { inlineErrors: scopedBank }
       );
       if (generation !== searchGeneration.current) return;
 
@@ -286,7 +285,7 @@ function SearchDebugPanel({ currentBank }: { currentBank: ReturnType<typeof useB
       setTrace(data.trace || null);
       setViewMode("results");
     } catch (error) {
-      if (generation !== searchGeneration.current) return;
+      if (!scopedBank || generation !== searchGeneration.current) return;
       const status = (error as { status?: number } | null)?.status;
       if (status && error instanceof Error) {
         setRecallError(error.message);

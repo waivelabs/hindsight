@@ -949,7 +949,7 @@
     "colMentions": "提及次数",
     "colFirstSeen": "初始来源日期",
     "colLastSeen": "最新来源日期",
-    "sourceDatesHelp": "来源日期来自关联记忆，可以描述未来的事件。",
+    "sourceDatesHelp": "来源日期来自关联记忆，可以描述未来的事件。 首次记录实体时，如果没有事件日期，Cortana 会使用记录时间。",
     "noEntitiesFound": "未找到实体",
     "noEntitiesDescription": "实体会在新增记忆时从事实中提取。",
     "entityDetails": "实体详情",

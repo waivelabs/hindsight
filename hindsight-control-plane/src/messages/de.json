@@ -949,7 +949,7 @@
     "colMentions": "Erwähnungen",
     "colFirstSeen": "Ursprüngliches Quelldatum",
     "colLastSeen": "Neuestes Quelldatum",
-    "sourceDatesHelp": "Quelldaten stammen aus verknüpften Erinnerungen und können zukünftige Ereignisse beschreiben.",
+    "sourceDatesHelp": "Quelldaten stammen aus verknüpften Erinnerungen und können zukünftige Ereignisse beschreiben. Wird eine Entität erstmals ohne Ereignisdatum erfasst, verwendet Cortana den Zeitpunkt der Erfassung.",
     "noEntitiesFound": "Keine Entitäten gefunden",
     "noEntitiesDescription": "Entitäten werden aus Fakten extrahiert, wenn Erinnerungen hinzugefügt werden.",
     "entityDetails": "Entitätsdetails",

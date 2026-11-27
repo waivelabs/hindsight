@@ -949,7 +949,7 @@
     "colMentions": "Mentions",
     "colFirstSeen": "Date source initiale",
     "colLastSeen": "Dernière date source",
-    "sourceDatesHelp": "Les dates sources proviennent des souvenirs liés et peuvent décrire des événements futurs.",
+    "sourceDatesHelp": "Les dates sources proviennent des souvenirs liés et peuvent décrire des événements futurs. Si une entité est enregistrée pour la première fois sans date d’événement, Cortana utilise la date de cet enregistrement.",
     "noEntitiesFound": "Aucune entité trouvée",
     "noEntitiesDescription": "Les entités sont extraites des faits lors de l'ajout de souvenirs.",
     "entityDetails": "Détails de l'entité",

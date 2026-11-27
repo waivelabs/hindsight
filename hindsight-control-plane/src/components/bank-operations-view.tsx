@@ -155,6 +155,7 @@ export function BankOperationsView() {
   const [result, setResult] = useState<{ key: string; status: "success" | "error" } | null>(null);
   const requestRef = useRef<{ key: string } | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [refreshVersion, setRefreshVersion] = useState(0);
   const status = result?.key === queryKey ? result.status : "loading";
   const [selectedOperation, setSelectedOperation] = useState<OperationDetails | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -416,7 +417,7 @@ export function BankOperationsView() {
     setCancellingOpId(operationId);
     try {
       await client.cancelOperation(currentBank, operationId);
-      await loadOperations();
+      setRefreshVersion((version) => version + 1);
     } catch (error) {
       // Error toast is shown automatically by the API client interceptor
     } finally {
@@ -430,7 +431,7 @@ export function BankOperationsView() {
     setRetryingOpId(operationId);
     try {
       await client.retryOperation(currentBank, operationId);
-      await loadOperations();
+      setRefreshVersion((version) => version + 1);
     } catch (error) {
       // Error toast is shown automatically by the API client interceptor
     } finally {
@@ -448,7 +449,7 @@ export function BankOperationsView() {
         setDialogOpen(false);
         setSelectedOperation(null);
       }
-      await loadOperations();
+      setRefreshVersion((version) => version + 1);
     } catch (error) {
       // Error toast is shown automatically by the API client interceptor
     } finally {
@@ -499,7 +500,7 @@ export function BankOperationsView() {
     return () => {
       requestRef.current = null;
     };
-  }, [loadOperations]);
+  }, [loadOperations, refreshVersion]);
 
   useEffect(() => {
     if (!currentBank) return;

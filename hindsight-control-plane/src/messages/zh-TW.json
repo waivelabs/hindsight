@@ -949,7 +949,7 @@
     "colMentions": "提及次數",
     "colFirstSeen": "初始來源日期",
     "colLastSeen": "最新來源日期",
-    "sourceDatesHelp": "來源日期來自關聯記憶，可以描述未來的事件。",
+    "sourceDatesHelp": "來源日期來自關聯記憶，可以描述未來的事件。 首次記錄實體時，若無事件日期，Cortana 會使用記錄時間。",
     "noEntitiesFound": "找不到實體",
     "noEntitiesDescription": "實體會在新增記憶時從事實中擷取。",
     "entityDetails": "實體詳情",

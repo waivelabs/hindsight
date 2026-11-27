@@ -949,7 +949,7 @@
     "colMentions": "언급 횟수",
     "colFirstSeen": "최초 출처 날짜",
     "colLastSeen": "최신 출처 날짜",
-    "sourceDatesHelp": "출처 날짜는 연결된 기억에서 가져오며 미래의 사건을 나타낼 수 있습니다.",
+    "sourceDatesHelp": "출처 날짜는 연결된 기억에서 가져오며 미래의 사건을 나타낼 수 있습니다. 엔터티를 처음 기록할 때 이벤트 날짜가 없으면 Cortana는 기록 시각을 사용합니다.",
     "noEntitiesFound": "엔티티를 찾을 수 없습니다",
     "noEntitiesDescription": "메모리가 추가될 때 사실에서 엔티티가 추출됩니다.",
     "entityDetails": "엔티티 세부 정보",

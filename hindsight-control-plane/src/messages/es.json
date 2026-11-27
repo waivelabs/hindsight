@@ -949,7 +949,7 @@
     "colMentions": "Menciones",
     "colFirstSeen": "Fecha inicial de origen",
     "colLastSeen": "Fecha más reciente de origen",
-    "sourceDatesHelp": "Las fechas de origen provienen de los recuerdos vinculados y pueden describir eventos futuros.",
+    "sourceDatesHelp": "Las fechas de origen provienen de los recuerdos vinculados y pueden describir eventos futuros. Si una entidad se registra por primera vez sin fecha de evento, Cortana usa la hora de registro.",
     "noEntitiesFound": "No se encontraron entidades",
     "noEntitiesDescription": "Las entidades se extraen de los hechos cuando se agregan memorias.",
     "entityDetails": "Detalles de la entidad",
