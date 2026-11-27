@@ -2072,11 +2072,9 @@
       },
       "recall": {
         "failed": "Recall konnte nicht ausgeführt werden",
-        "projectDenied": "Recall wurde abgelehnt. Prüfe, ob diese Projektkennung für die Bank registriert ist.",
+        "projectDenied": "Recall wurde für diesen Bereich abgelehnt. Prüfe die Projektkennung oder wende dich an den Dashboard-Betreiber.",
         "denied": "Recall wurde abgelehnt. Prüfe deinen Zugriff auf die Bank und die gewählten Filter.",
         "invalid": "Prüfe deine Recall-Abfrage und die Filter und versuche es erneut.",
-        "emptyProject": "Für dieses Projekt sind keine geeigneten Erinnerungen verfügbar. Prüfe die Projektkennung.",
-        "largeProject": "Dieses Projekt überschreitet das Recall-Limit des Dashboards. Verwende Cortana Recall für dieses Projekt.",
         "rateLimited": "Recall ist ausgelastet. Warte kurz und versuche es erneut.",
         "unavailable": "Recall ist derzeit nicht verfügbar. Versuche es gleich erneut."
       },

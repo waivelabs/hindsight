@@ -2072,11 +2072,9 @@
       },
       "recall": {
         "failed": "Falha ao executar Recall",
-        "projectDenied": "A busca foi negada. Verifique se o identificador do projeto está registrado neste banco.",
+        "projectDenied": "A busca foi negada para este escopo. Confira o identificador do projeto ou peça ajuda ao responsável pelo painel.",
         "denied": "A busca foi negada. Verifique seu acesso ao banco e os filtros selecionados.",
         "invalid": "Confira a consulta do Recall e os filtros e tente novamente.",
-        "emptyProject": "Nenhuma memória elegível está disponível para este projeto. Confira o identificador do projeto.",
-        "largeProject": "Este projeto excede o limite do Recall no painel. Use o Cortana Recall para este projeto.",
         "rateLimited": "O Recall está ocupado. Aguarde um momento e tente novamente.",
         "unavailable": "O Recall está indisponível. Tente novamente em instantes."
       },

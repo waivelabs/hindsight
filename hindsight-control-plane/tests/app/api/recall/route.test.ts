@@ -67,17 +67,15 @@ describe("dashboard Recall proxy", () => {
     expect(await response.json()).toMatchObject({ error: expect.stringContaining("project slug") });
   });
 
-  it("distinguishes an empty project from a missing upstream route", async () => {
-    vi.spyOn(globalThis, "fetch")
-      .mockResolvedValueOnce(Response.json({ code: "empty_project" }, { status: 404 }))
-      .mockResolvedValueOnce(new Response(null, { status: 404 }));
-    const form = { bank_id: "ccc-work", project: "widget", query: "Widget" };
-    const empty = await POST(request(form));
-    const missing = await POST(request(form));
+  it.each([404, 409])("preserves upstream status %i with generic guidance", async (status) => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      Response.json({ detail: "private diagnostic" }, { status })
+    );
+    const response = await POST(request({
+      bank_id: "ccc-work", project: "widget", query: "Widget",
+    }));
 
-    expect(empty.status).toBe(404);
-    expect(missing.status).toBe(404);
-    expect(await empty.json()).toMatchObject({ error: expect.stringContaining("No eligible memories") });
-    expect(await missing.json()).toMatchObject({ error: expect.stringContaining("Recall is unavailable") });
+    expect(response.status).toBe(status);
+    expect(await response.json()).toEqual({ error: "Recall is unavailable. Try again shortly." });
   });
 });

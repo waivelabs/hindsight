@@ -2072,11 +2072,9 @@
       },
       "recall": {
         "failed": "Failed to recall",
-        "projectDenied": "Recall was denied. Check that the project slug is registered for this bank.",
+        "projectDenied": "Recall was denied for this scope. Check the project slug or ask the dashboard operator for help.",
         "denied": "Recall was denied. Check your access to the bank and the selected filters.",
         "invalid": "Check your Recall query and filters, then try again.",
-        "emptyProject": "No eligible memories are available for this project. Check the project slug.",
-        "largeProject": "This project exceeds the dashboard Recall limit. Use Cortana Recall for this project.",
         "rateLimited": "Recall is busy. Wait briefly and try again.",
         "unavailable": "Recall is unavailable. Try again shortly."
       },

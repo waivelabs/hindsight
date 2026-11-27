@@ -2072,11 +2072,9 @@
       },
       "recall": {
         "failed": "召回失败",
-        "projectDenied": "搜索被拒绝。请确认该项目标识已在此记忆库注册。",
+        "projectDenied": "当前范围的搜索被拒绝。请检查项目标识，或联系控制面板管理员。",
         "denied": "搜索被拒绝。请检查记忆库访问权限和所选筛选条件。",
         "invalid": "请检查 Recall 查询和筛选条件，然后重试。",
-        "emptyProject": "该项目没有可供搜索的记忆。请检查项目标识。",
-        "largeProject": "该项目超出控制面板的 Recall 上限。请使用 Cortana Recall 搜索。",
         "rateLimited": "Recall 繁忙。请稍后重试。",
         "unavailable": "Recall 暂不可用。请稍后重试。"
       },

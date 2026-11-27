@@ -2072,11 +2072,9 @@
       },
       "recall": {
         "failed": "未能召回",
-        "projectDenied": "搜尋被拒。請確認專案識別碼已喺呢個記憶庫登記。",
+        "projectDenied": "呢個範圍嘅搜尋被拒。請檢查專案識別碼，或者搵儀表板管理員幫手。",
         "denied": "搜尋被拒。請檢查記憶庫存取權限同已揀嘅篩選條件。",
         "invalid": "請檢查 Recall 查詢同篩選條件，再試一次。",
-        "emptyProject": "呢個專案冇可以搜尋嘅記憶。請檢查專案識別碼。",
-        "largeProject": "呢個專案超出儀表板嘅 Recall 上限。請用 Cortana Recall 搜尋。",
         "rateLimited": "Recall 而家好繁忙。請等一陣再試。",
         "unavailable": "Recall 暫時用唔到。請等一陣再試。"
       },

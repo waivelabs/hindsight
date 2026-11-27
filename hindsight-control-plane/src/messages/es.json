@@ -2072,11 +2072,9 @@
       },
       "recall": {
         "failed": "No se pudo ejecutar Recall",
-        "projectDenied": "Se denegó la búsqueda. Comprueba que el identificador del proyecto esté registrado para este banco.",
+        "projectDenied": "Se denegó la búsqueda en este ámbito. Comprueba el identificador del proyecto o pide ayuda al administrador del panel.",
         "denied": "Se denegó la búsqueda. Comprueba tu acceso al banco y los filtros seleccionados.",
         "invalid": "Revisa la consulta de Recall y los filtros y vuelve a intentarlo.",
-        "emptyProject": "No hay memorias disponibles para este proyecto. Comprueba el identificador del proyecto.",
-        "largeProject": "Este proyecto supera el límite de Recall del panel. Usa Cortana Recall para este proyecto.",
         "rateLimited": "Recall está ocupado. Espera un momento y vuelve a intentarlo.",
         "unavailable": "Recall no está disponible. Vuelve a intentarlo en breve."
       },

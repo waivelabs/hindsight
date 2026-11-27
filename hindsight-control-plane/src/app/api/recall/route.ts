@@ -9,14 +9,14 @@ function recallError(request: NextRequest, status: number, error: string, key: s
   );
 }
 
-function upstreamRecallError(request: NextRequest, bankId: string, status: number, code?: string) {
+function upstreamRecallError(request: NextRequest, bankId: string, status: number) {
   if (status === 403) {
     const scoped = bankId === "ccc-work";
     return recallError(
       request,
       status,
       scoped
-        ? "Recall was denied. Check that the project slug is registered for this bank."
+        ? "Recall was denied for this scope. Check the project slug or ask the dashboard operator for help."
         : "Recall was denied. Check your access to the bank and the selected filters.",
       scoped ? "projectDenied" : "denied"
     );
@@ -24,16 +24,6 @@ function upstreamRecallError(request: NextRequest, bankId: string, status: numbe
   if (status === 400 || status === 422) {
     return recallError(
       request, status, "Check your Recall query and filters, then try again.", "invalid"
-    );
-  }
-  if (status === 404 && code === "empty_project") {
-    return recallError(
-      request, status, "No eligible memories are available for this project. Check the project slug.", "emptyProject"
-    );
-  }
-  if (status === 409 && code === "project_too_large") {
-    return recallError(
-      request, status, "This project exceeds the dashboard Recall limit. Use Cortana Recall for this project.", "largeProject"
     );
   }
   if (status === 429) {
@@ -78,10 +68,7 @@ export async function POST(request: NextRequest) {
         body: JSON.stringify({ project: body.project, query, max_tokens }),
         signal: AbortSignal.timeout(95_000),
       });
-      if (!response.ok) {
-        const error = await response.json().catch(() => null);
-        return upstreamRecallError(request, bankId, response.status, error?.code);
-      }
+      if (!response.ok) return upstreamRecallError(request, bankId, response.status);
       const data = await response.json();
       if (!Array.isArray(data?.results)) return upstreamRecallError(request, bankId, 502);
       return NextResponse.json({ results: data.results });
