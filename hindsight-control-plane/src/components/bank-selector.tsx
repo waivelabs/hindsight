@@ -555,7 +555,7 @@ function BankSelectorInner() {
   };
 
   return (
-    <div className="bg-card text-card-foreground px-3 py-2 lg:px-5 lg:py-3 border-b-4 border-primary-gradient">
+    <div className="bg-card text-card-foreground px-5 py-3 border-b-4 border-primary-gradient max-lg:px-3 max-lg:py-2">
       <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-2 gap-y-2 text-sm lg:flex lg:gap-4">
         {/* Logo, split so only the mark spins on navigation while the wordmark
             stays put. The mark is the standalone favicon.png (so it can rotate
@@ -1580,7 +1580,7 @@ export function BankSelector() {
   return (
     <Suspense
       fallback={
-        <div className="bg-card text-card-foreground px-3 py-2 lg:px-5 lg:py-3 border-b-4 border-primary-gradient">
+        <div className="bg-card text-card-foreground px-5 py-3 border-b-4 border-primary-gradient max-lg:px-3 max-lg:py-2">
           <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-2 gap-y-2 text-sm lg:flex lg:gap-4">
             {/* ccc(brand): Cortana lockup (static fallback while loading). */}
             <div className="col-start-1 row-start-1 flex shrink-0 items-center">
